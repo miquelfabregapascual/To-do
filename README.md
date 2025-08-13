@@ -1,6 +1,6 @@
 <<<<<<< HEAD
 # To-do
-Doesnt show the events to the calendar 
+Doesnt show the events to the calendar   
 Deleting task doesnt work
 
 description is limited to few characters sends an error page when trying for a longer text
