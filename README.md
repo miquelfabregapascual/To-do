@@ -1,5 +1,12 @@
 <<<<<<< HEAD
 # To-do
+task save the date as of today no matter what date you pick
+
+Deleting task doesnt work
+
+description is limited to few characters sends an error page when trying for a longer text
+
+the var for navigating between weeks should be next to the weeks not above where we wrtie the task
 =======
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
