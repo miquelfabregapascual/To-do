@@ -1,7 +1,6 @@
 <<<<<<< HEAD
 # To-do
-task save the date as of today no matter what date you pick
-
+Doesnt show the events to the calendar 
 Deleting task doesnt work
 
 description is limited to few characters sends an error page when trying for a longer text
