@@ -103,10 +103,9 @@
                     {{-- === Tasks grouped by day === --}}
                     @php
                         if (!isset($tasksByDate)) {
-                            $tasksByDate = ($tasks ?? collect())->groupBy(function ($t) use ($hasDueDate) {
-                                return ($hasDueDate ?? false)
-                                    ? optional($t->due_date)->toDateString()
-                                    : \Carbon\Carbon::parse($t->created_at)->toDateString();
+                            $tasksByDate = ($tasks ?? collect())->groupBy(function ($t) {
+                                return optional($t->due_date)->toDateString()
+                                    ?? \Carbon\Carbon::parse($t->created_at)->toDateString();
                             });
                         }
                     @endphp

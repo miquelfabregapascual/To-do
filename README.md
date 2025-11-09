@@ -73,5 +73,3 @@ This runs `php artisan serve`, `php artisan queue:listen`, and `npm run dev` con
 - Primary task logic: `app/Http/Controllers/TaskController.php`
 - Blade layout for the calendar dashboard: `resources/views/dashboard.blade.php`
 - Simplified list view shared by Inbox/Today/Completed/All: `resources/views/tasks/simple-list.blade.php`
-
-With these pieces in place the project is ready to demo as a small, interview-friendly task manager.
