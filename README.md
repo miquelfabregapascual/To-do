@@ -74,3 +74,4 @@ This runs `php artisan serve`, `php artisan queue:listen`, and `npm run dev` con
 - Blade layout for the calendar dashboard: `resources/views/dashboard.blade.php`
 - Simplified list view shared by Inbox/Today/Completed/All: `resources/views/tasks/simple-list.blade.php`
 
+
