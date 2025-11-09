@@ -1,4 +1,10 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+    @php
+        $primaryNavigation = collect(config('navigation.primary', []))
+            ->filter(fn ($item) => isset($item['route']) && \Illuminate\Support\Facades\Route::has($item['route']))
+            ->values();
+    @endphp
+
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -11,10 +17,25 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
+                <div class="hidden sm:-my-px sm:ms-10 sm:flex sm:items-center sm:space-x-1">
+                    @foreach ($primaryNavigation as $item)
+                        @php
+                            $isActive = request()->routeIs($item['route']);
+                            $isAccent = $item['accent'] ?? false;
+                            $activeClass = $isAccent
+                                ? 'bg-blue-600 text-white shadow-sm'
+                                : 'bg-gray-100 text-gray-900 shadow-sm';
+                            $inactiveClass = 'text-gray-600 hover:text-gray-900 hover:bg-gray-50';
+                        @endphp
+
+                        <a href="{{ route($item['route']) }}"
+                           class="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition {{ $isActive ? $activeClass : $inactiveClass }}">
+                            @if (! empty($item['icon']))
+                                <span aria-hidden="true">{{ $item['icon'] }}</span>
+                            @endif
+                            <span>{{ $item['label'] }}</span>
+                        </a>
+                    @endforeach
                 </div>
             </div>
 
@@ -139,9 +160,24 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
+            @foreach ($primaryNavigation as $item)
+                @php
+                    $isActive = request()->routeIs($item['route']);
+                    $isAccent = $item['accent'] ?? false;
+                    $activeClass = $isAccent
+                        ? 'bg-blue-50 text-blue-700 border-blue-500'
+                        : 'bg-gray-100 text-gray-900 border-gray-200';
+                    $inactiveClass = 'text-gray-600 hover:text-gray-900 hover:bg-gray-50';
+                @endphp
+
+                <a href="{{ route($item['route']) }}"
+                   class="flex items-center gap-2 ps-4 pe-4 py-2 text-base font-medium border-l-4 {{ $isActive ? $activeClass : 'border-transparent ' . $inactiveClass }}">
+                    @if (! empty($item['icon']))
+                        <span aria-hidden="true">{{ $item['icon'] }}</span>
+                    @endif
+                    <span>{{ $item['label'] }}</span>
+                </a>
+            @endforeach
         </div>
 
         <!-- Responsive Settings Options -->
