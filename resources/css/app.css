@@ -34,32 +34,23 @@ button,
     width: 4rem;
     height: 4rem;
 }
+
 @layer utilities {
   .clamp-resp {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    -webkit-line-clamp: 2;        /* base */
+    -webkit-line-clamp: 2; /* base */
   }
-  @screen md { .clamp-resp { -webkit-line-clamp: 3; } }
-  @screen lg { .clamp-resp { -webkit-line-clamp: 4; } }
-}
 
-
-
-@media (min-width: 640px){ .clamp-resp{ -webkit-line-clamp: 2; } }   /* sm: 2 lines */
-@media (min-width: 768px){ .clamp-resp{ -webkit-line-clamp: 3; } }   /* md: 3 lines */
-@media (min-width: 1024px){ .clamp-resp{ -webkit-line-clamp: 4; } } 
-/* 2-line clamp without plugin */
-@layer utilities {
-  /* 2-line clamp without plugin */
-
-  @screen sm {
-    .clamp-resp { -webkit-line-clamp: 3; }  /* ≥640px */
-  }
   @screen md {
-    .clamp-resp { -webkit-line-clamp: 4; }  /* ≥768px */
+    .clamp-resp { -webkit-line-clamp: 3; }
   }
+
+  @screen lg {
+    .clamp-resp { -webkit-line-clamp: 4; }
+  }
+
   /* CSS-only modal via :target */
   .modal {
     @apply fixed inset-0 z-50 flex items-start md:items-center justify-center bg-black/60 opacity-0 pointer-events-none;
