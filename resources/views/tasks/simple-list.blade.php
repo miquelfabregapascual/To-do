@@ -22,7 +22,7 @@
                                 <p class="mt-2 text-xs text-gray-300 clamp-resp break-words whitespace-pre-wrap">
                                     {{ $task->description }}
                                 </p>
-                            @endif>
+                            @endif
                         </div>
 
                         <div class="flex flex-col items-end gap-2 shrink-0">
