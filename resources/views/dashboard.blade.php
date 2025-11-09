@@ -154,46 +154,11 @@
                                                         </div>
 
                                                         {{-- Description preview --}}
-                                                       {{-- Description preview --}}
-@php
-    $desc = trim((string) $task->description);
-    $descLen = mb_strlen($desc);
-
-    // Decide when to clamp — only for long descriptions
-    // Tune this value; 180–200 characters is good for about 3-4 lines
-    $shouldClamp = $descLen > 200;
-
-    $modalId = "task-desc-{$task->id}";
-@endphp
-
-@if ($descLen)
-    <p class="mt-1 text-xs text-gray-300 break-words {{ $shouldClamp ? 'whitespace-pre-wrap clamp-resp' : 'whitespace-pre-wrap' }}">
-        {{ $desc }}
-    </p>
-
-    @if ($shouldClamp)
-        <a href="#{{ $modalId }}" class="text-blue-400 text-xs mt-1 inline-block underline">
-            Leer más
-        </a>
-
-        {{-- Modal (CSS-only via :target) --}}
-        <div id="{{ $modalId }}" class="modal">
-            <a href="#" class="absolute inset-0" aria-label="Cerrar"></a>
-            <div class="modal-card">
-                <a href="#" class="modal-close" aria-label="Cerrar">×</a>
-                <h5 class="text-base font-semibold mb-2">{{ $task->title }}</h5>
-                <div class="text-sm whitespace-pre-wrap break-words">
-                    {{ $desc }}
-                </div>
-                <div class="mt-4 text-right">
-                    <a href="#" class="inline-block px-3 py-1.5 rounded bg-gray-700 hover:bg-gray-600 text-gray-100">
-                        Cerrar
-                    </a>
-                </div>
-            </div>
-        </div>
-    @endif
-@endif
+                                                        <x-task-description
+                                                            :text="$task->description"
+                                                            :title="$task->title"
+                                                            :task-id="$task->id"
+                                                        />
 
                                                 {{-- Actions --}}
                                                 <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-gray-600/60">
