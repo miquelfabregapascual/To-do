@@ -1,3 +1,8 @@
+
+<head>
+@vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">

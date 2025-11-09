@@ -4,38 +4,171 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
+use App\Models\Task;
+use App\Models\User;
+use Carbon\Carbon;
 
 class TaskController extends Controller
 {
-  
-    public function index()
-{
-    /** @var \App\Models\User $user */
-    $user = Auth::user();
+    public function index(Request $request)
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login');
+        }
 
-    $tasks = $user->tasks()->latest()->get();
-    return view('dashboard', compact('tasks'));
-}
-public function create()
-{
-    return view('tasks.create');
-}
+        // Week navigation (?week=0 this week, -1 prev, +1 next)
+        $weekOffset = (int) $request->query('week', 0);
+        $weekStart  = Carbon::now()->startOfWeek(Carbon::MONDAY)->addWeeks($weekOffset)->startOfDay();
+        $weekEnd    = (clone $weekStart)->endOfWeek(Carbon::SUNDAY)->endOfDay();
 
-public function store(Request $request)
+        // Mon..Sun collection
+        $days = collect();
+        for ($i = 0; $i < 7; $i++) {
+            $days->push((clone $weekStart)->addDays($i));
+        }
+
+        $hasDueDate = Schema::hasColumn('tasks', 'due_date');
+
+        if ($hasDueDate) {
+            $tasks = Task::where('user_id', $user->id)
+                ->whereDate('due_date', '>=', $weekStart->toDateString())
+                ->whereDate('due_date', '<=', $weekEnd->toDateString())
+                ->orderBy('due_date')
+                ->orderBy('created_at', 'desc')
+                ->get();
+        } else {
+            $tasks = Task::where('user_id', $user->id)
+                ->whereBetween('created_at', [$weekStart, $weekEnd])
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
+
+        // Group tasks by day key YYYY-MM-DD so Blade can display correctly
+        $tasksByDate = $tasks->groupBy(function ($t) use ($hasDueDate) {
+            return $hasDueDate
+                ? optional($t->due_date)->toDateString()
+                : Carbon::parse($t->created_at)->toDateString();
+        });
+
+        return view('dashboard', [
+            'tasks'       => $tasks,
+            'tasksByDate' => $tasksByDate,
+            'days'        => $days,
+            'weekOffset'  => $weekOffset,
+            'weekStart'   => $weekStart,
+            'weekEnd'     => $weekEnd,
+            'hasDueDate'  => $hasDueDate,
+        ]);
+    }
+
+    public function create()
+    {
+        return view('tasks.create');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'due_date'    => 'required|date|after_or_equal:today',
+        ]);
+
+        /** @var User $user */
+        $user = Auth::user();
+
+        $user->tasks()->create([
+            'title'       => $request->title,
+            'description' => $request->description,
+            'due_date'    => Carbon::parse($request->due_date)->toDateString(),
+            'completed'   => false,
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Task created successfully!');
+    }
+
+    public function toggle(Task $task)
+    {
+        abort_unless($task->user_id === Auth::id(), 403);
+
+        $task->completed = ! $task->completed;
+        $task->save();
+
+        return back()->with('success', 'Task updated.');
+    }
+
+    public function destroy(Task $task)
+    {
+        abort_unless($task->user_id === Auth::id(), 403);
+
+        $task->delete();
+
+        return back()->with('success', 'Task deleted successfully.');
+    }
+
+    public function inbox()
 {
-    $request->validate([
-        'title' => 'required|string|max:255',
+    $user = auth()->user();
+
+    $tasks = \App\Models\Task::where('user_id', $user->id)
+        ->orderBy('due_date')
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return view('tasks.simple-list', [
+        'title' => 'Inbox',
+        'tasks' => $tasks,
     ]);
-
-    /** @var \App\Models\User $user */
-    $user = Auth::user();
-
-    $user->tasks()->create([
-        'title' => $request->title,
-    ]);
-
-    return redirect()->route('dashboard')->with('success', 'Task created successfully!');
 }
 
+public function today()
+{
+    $user = auth()->user();
+    $today = \Carbon\Carbon::today();
+
+    $tasks = \App\Models\Task::where('user_id', $user->id)
+        ->whereDate('due_date', $today)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return view('tasks.simple-list', [
+        'title' => 'Hoy',
+        'tasks' => $tasks,
+    ]);
+}
+
+public function completed()
+{
+    $user = auth()->user();
+
+    $tasks = \App\Models\Task::where('user_id', $user->id)
+        ->where('completed', true)
+        ->orderBy('due_date')
+        ->orderBy('updated_at', 'desc')
+        ->get();
+
+    return view('tasks.simple-list', [
+        'title' => 'Completadas',
+        'tasks' => $tasks,
+    ]);
+}
+
+public function all()
+{
+    $user = auth()->user();
+
+    $tasks = \App\Models\Task::where('user_id', $user->id)
+        ->orderBy('due_date')
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return view('tasks.simple-list', [
+        'title' => 'Todas',
+        'tasks' => $tasks,
+    ]);
+}
 
 }

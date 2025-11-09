@@ -2,6 +2,94 @@
 @tailwind components;
 @tailwind utilities;
 
-[x-cloak] {
-    display: none;
+/* 🌑 Dark Theme Base Styles */
+body {
+    @apply bg-gray-900 text-gray-100 font-sans;
+}
+
+/* 🔲 Input Styling */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+    @apply bg-gray-800 border border-gray-700 text-white placeholder-gray-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+/* 🟦 Button Styling */
+button,
+.x-button {
+    @apply bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-400;
+}
+
+/* 📋 Form Card */
+.auth-card {
+    @apply bg-gray-800 rounded-xl shadow-lg p-8 w-full max-w-md;
+}
+
+/* 🖼️ Logo Resize */
+.auth-logo {
+    @apply h-12 mx-auto mb-6;
+}
+[x-authentication-card-logo] {
+    width: 4rem;
+    height: 4rem;
+}
+@layer utilities {
+  .clamp-resp {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 2;        /* base */
+  }
+  @screen md { .clamp-resp { -webkit-line-clamp: 3; } }
+  @screen lg { .clamp-resp { -webkit-line-clamp: 4; } }
+}
+
+
+
+@media (min-width: 640px){ .clamp-resp{ -webkit-line-clamp: 2; } }   /* sm: 2 lines */
+@media (min-width: 768px){ .clamp-resp{ -webkit-line-clamp: 3; } }   /* md: 3 lines */
+@media (min-width: 1024px){ .clamp-resp{ -webkit-line-clamp: 4; } } 
+/* 2-line clamp without plugin */
+@layer utilities {
+  /* 2-line clamp without plugin */
+
+  @screen sm {
+    .clamp-resp { -webkit-line-clamp: 3; }  /* ≥640px */
+  }
+  @screen md {
+    .clamp-resp { -webkit-line-clamp: 4; }  /* ≥768px */
+  }
+  /* CSS-only modal via :target */
+  .modal {
+    @apply fixed inset-0 z-50 flex items-start md:items-center justify-center bg-black/60 opacity-0 pointer-events-none;
+  }
+  .modal:target {
+    @apply opacity-100 pointer-events-auto;
+  }
+  .modal-card {
+    @apply relative bg-gray-800 border border-gray-700 text-gray-100 rounded-lg shadow-xl w-[92%] max-w-xl p-5;
+  }
+  .modal-close {
+    @apply absolute top-2 right-3 text-gray-300 hover:text-white text-xl leading-none;
+  }
+
+  /* Calendar grid behaves like Todoist: 7 equal columns on wide; scrollable on small */
+  .calendar-grid {
+    @apply grid gap-3;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+  @media (max-width: 1024px) {
+    .calendar-grid {
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(240px, 1fr);
+      grid-template-columns: none;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+    }
+    .calendar-cell {
+      scroll-snap-align: start;
+    }
+  }
 }
