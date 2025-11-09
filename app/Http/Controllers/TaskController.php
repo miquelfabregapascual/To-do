@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Schema;
 use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -15,14 +14,14 @@ class TaskController extends Controller
     {
         /** @var User|null $user */
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('login');
         }
 
         // Week navigation (?week=0 this week, -1 prev, +1 next)
         $weekOffset = (int) $request->query('week', 0);
-        $weekStart  = Carbon::now()->startOfWeek(Carbon::MONDAY)->addWeeks($weekOffset)->startOfDay();
-        $weekEnd    = (clone $weekStart)->endOfWeek(Carbon::SUNDAY)->endOfDay();
+        $weekStart = Carbon::now()->startOfWeek(Carbon::MONDAY)->addWeeks($weekOffset)->startOfDay();
+        $weekEnd = (clone $weekStart)->endOfWeek(Carbon::SUNDAY)->endOfDay();
 
         // Mon..Sun collection
         $days = collect();
@@ -30,37 +29,26 @@ class TaskController extends Controller
             $days->push((clone $weekStart)->addDays($i));
         }
 
-        $hasDueDate = Schema::hasColumn('tasks', 'due_date');
-
-        if ($hasDueDate) {
-            $tasks = Task::where('user_id', $user->id)
-                ->whereDate('due_date', '>=', $weekStart->toDateString())
-                ->whereDate('due_date', '<=', $weekEnd->toDateString())
-                ->orderBy('due_date')
-                ->orderBy('created_at', 'desc')
-                ->get();
-        } else {
-            $tasks = Task::where('user_id', $user->id)
-                ->whereBetween('created_at', [$weekStart, $weekEnd])
-                ->orderBy('created_at', 'desc')
-                ->get();
-        }
+        $tasks = Task::where('user_id', $user->id)
+            ->whereDate('due_date', '>=', $weekStart->toDateString())
+            ->whereDate('due_date', '<=', $weekEnd->toDateString())
+            ->orderBy('due_date')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         // Group tasks by day key YYYY-MM-DD so Blade can display correctly
-        $tasksByDate = $tasks->groupBy(function ($t) use ($hasDueDate) {
-            return $hasDueDate
-                ? optional($t->due_date)->toDateString()
-                : Carbon::parse($t->created_at)->toDateString();
+        $tasksByDate = $tasks->groupBy(function (Task $t) {
+            return optional($t->due_date)->toDateString()
+                ?? Carbon::parse($t->created_at)->toDateString();
         });
 
         return view('dashboard', [
-            'tasks'       => $tasks,
+            'tasks' => $tasks,
             'tasksByDate' => $tasksByDate,
-            'days'        => $days,
-            'weekOffset'  => $weekOffset,
-            'weekStart'   => $weekStart,
-            'weekEnd'     => $weekEnd,
-            'hasDueDate'  => $hasDueDate,
+            'days' => $days,
+            'weekOffset' => $weekOffset,
+            'weekStart' => $weekStart,
+            'weekEnd' => $weekEnd,
         ]);
     }
 
@@ -72,19 +60,19 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title'       => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'due_date'    => 'required|date|after_or_equal:today',
+            'due_date' => 'required|date|after_or_equal:today',
         ]);
 
         /** @var User $user */
         $user = Auth::user();
 
         $user->tasks()->create([
-            'title'       => $request->title,
+            'title' => $request->title,
             'description' => $request->description,
-            'due_date'    => Carbon::parse($request->due_date)->toDateString(),
-            'completed'   => false,
+            'due_date' => Carbon::parse($request->due_date)->toDateString(),
+            'completed' => false,
         ]);
 
         return redirect()->route('dashboard')->with('success', 'Task created successfully!');
@@ -110,65 +98,64 @@ class TaskController extends Controller
     }
 
     public function inbox()
-{
-    $user = auth()->user();
+    {
+        $user = auth()->user();
 
-    $tasks = \App\Models\Task::where('user_id', $user->id)
-        ->orderBy('due_date')
-        ->orderBy('created_at', 'desc')
-        ->get();
+        $tasks = Task::where('user_id', $user->id)
+            ->orderBy('due_date')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-    return view('tasks.simple-list', [
-        'title' => 'Inbox',
-        'tasks' => $tasks,
-    ]);
-}
+        return view('tasks.simple-list', [
+            'title' => 'Inbox',
+            'tasks' => $tasks,
+        ]);
+    }
 
-public function today()
-{
-    $user = auth()->user();
-    $today = \Carbon\Carbon::today();
+    public function today()
+    {
+        $user = auth()->user();
+        $today = Carbon::today();
 
-    $tasks = \App\Models\Task::where('user_id', $user->id)
-        ->whereDate('due_date', $today)
-        ->orderBy('created_at', 'desc')
-        ->get();
+        $tasks = Task::where('user_id', $user->id)
+            ->whereDate('due_date', $today)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-    return view('tasks.simple-list', [
-        'title' => 'Hoy',
-        'tasks' => $tasks,
-    ]);
-}
+        return view('tasks.simple-list', [
+            'title' => 'Hoy',
+            'tasks' => $tasks,
+        ]);
+    }
 
-public function completed()
-{
-    $user = auth()->user();
+    public function completed()
+    {
+        $user = auth()->user();
 
-    $tasks = \App\Models\Task::where('user_id', $user->id)
-        ->where('completed', true)
-        ->orderBy('due_date')
-        ->orderBy('updated_at', 'desc')
-        ->get();
+        $tasks = Task::where('user_id', $user->id)
+            ->where('completed', true)
+            ->orderBy('due_date')
+            ->orderBy('updated_at', 'desc')
+            ->get();
 
-    return view('tasks.simple-list', [
-        'title' => 'Completadas',
-        'tasks' => $tasks,
-    ]);
-}
+        return view('tasks.simple-list', [
+            'title' => 'Completadas',
+            'tasks' => $tasks,
+        ]);
+    }
 
-public function all()
-{
-    $user = auth()->user();
+    public function all()
+    {
+        $user = auth()->user();
 
-    $tasks = \App\Models\Task::where('user_id', $user->id)
-        ->orderBy('due_date')
-        ->orderBy('created_at', 'desc')
-        ->get();
+        $tasks = Task::where('user_id', $user->id)
+            ->orderBy('due_date')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-    return view('tasks.simple-list', [
-        'title' => 'Todas',
-        'tasks' => $tasks,
-    ]);
-}
-
+        return view('tasks.simple-list', [
+            'title' => 'Todas',
+            'tasks' => $tasks,
+        ]);
+    }
 }
