@@ -20,4 +20,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/tasks',                [TaskController::class, 'store'])->name('tasks.store');
     Route::patch('/tasks/{task}/toggle', [TaskController::class, 'toggle'])->name('tasks.toggle');
     Route::delete('/tasks/{task}',       [TaskController::class, 'destroy'])->name('tasks.destroy');
+    Route::post('/planner/schedule',     [TaskController::class, 'schedule'])->name('planner.schedule');
 });
