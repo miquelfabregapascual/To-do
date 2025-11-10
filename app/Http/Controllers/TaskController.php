@@ -101,14 +101,22 @@ class TaskController extends Controller
     {
         $user = auth()->user();
 
-        $tasks = Task::where('user_id', $user->id)
-            ->orderBy('due_date')
-            ->orderBy('created_at', 'desc')
+        $unscheduled = Task::where('user_id', $user->id)
+            ->whereNull('due_date')
+            ->where('completed', false)
+            ->latest('created_at')
             ->get();
 
-        return view('tasks.simple-list', [
-            'title' => 'Inbox',
-            'tasks' => $tasks,
+        $scheduledSoon = Task::where('user_id', $user->id)
+            ->whereNotNull('due_date')
+            ->where('completed', false)
+            ->orderBy('due_date')
+            ->limit(5)
+            ->get();
+
+        return view('tasks.inbox', [
+            'unscheduled' => $unscheduled,
+            'scheduledSoon' => $scheduledSoon,
         ]);
     }
 
@@ -117,45 +125,89 @@ class TaskController extends Controller
         $user = auth()->user();
         $today = Carbon::today();
 
-        $tasks = Task::where('user_id', $user->id)
-            ->whereDate('due_date', $today)
-            ->orderBy('created_at', 'desc')
+        $overdue = Task::where('user_id', $user->id)
+            ->whereNotNull('due_date')
+            ->where('completed', false)
+            ->whereDate('due_date', '<', $today)
+            ->orderBy('due_date')
             ->get();
 
-        return view('tasks.simple-list', [
-            'title' => 'Hoy',
-            'tasks' => $tasks,
+        $todayTasks = Task::where('user_id', $user->id)
+            ->whereNotNull('due_date')
+            ->where('completed', false)
+            ->whereDate('due_date', $today)
+            ->orderBy('created_at')
+            ->get();
+
+        return view('tasks.today', [
+            'overdue' => $overdue,
+            'today' => $todayTasks,
         ]);
     }
 
     public function completed()
     {
         $user = auth()->user();
+        $today = Carbon::today();
 
-        $tasks = Task::where('user_id', $user->id)
+        $completedTasks = Task::where('user_id', $user->id)
             ->where('completed', true)
-            ->orderBy('due_date')
-            ->orderBy('updated_at', 'desc')
+            ->orderByDesc('updated_at')
             ->get();
 
-        return view('tasks.simple-list', [
-            'title' => 'Completadas',
-            'tasks' => $tasks,
+        $completedGroups = $completedTasks->groupBy(function (Task $task) use ($today) {
+            $updatedAt = $task->updated_at ?? $today;
+            $startOfWeek = (clone $updatedAt)->startOfWeek(Carbon::MONDAY);
+            $endOfWeek = (clone $updatedAt)->endOfWeek(Carbon::SUNDAY);
+
+            return sprintf(
+                'Semana del %s al %s',
+                $startOfWeek->translatedFormat('d M'),
+                $endOfWeek->translatedFormat('d M')
+            );
+        });
+
+        return view('tasks.completed', [
+            'completedGroups' => $completedGroups,
         ]);
     }
 
     public function all()
     {
         $user = auth()->user();
+        $today = Carbon::today();
 
-        $tasks = Task::where('user_id', $user->id)
+        $overdue = Task::where('user_id', $user->id)
+            ->whereNotNull('due_date')
+            ->where('completed', false)
+            ->whereDate('due_date', '<', $today)
             ->orderBy('due_date')
-            ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('tasks.simple-list', [
-            'title' => 'Todas',
-            'tasks' => $tasks,
+        $upcoming = Task::where('user_id', $user->id)
+            ->whereNotNull('due_date')
+            ->where('completed', false)
+            ->whereBetween('due_date', [$today, (clone $today)->addDays(7)])
+            ->orderBy('due_date')
+            ->get();
+
+        $unscheduled = Task::where('user_id', $user->id)
+            ->whereNull('due_date')
+            ->where('completed', false)
+            ->latest('created_at')
+            ->get();
+
+        $recentlyCompleted = Task::where('user_id', $user->id)
+            ->where('completed', true)
+            ->orderByDesc('updated_at')
+            ->limit(6)
+            ->get();
+
+        return view('tasks.overview', [
+            'overdue' => $overdue,
+            'upcoming' => $upcoming,
+            'unscheduled' => $unscheduled,
+            'recentlyCompleted' => $recentlyCompleted,
         ]);
     }
 }

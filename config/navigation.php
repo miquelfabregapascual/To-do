@@ -24,7 +24,7 @@ return [
             'icon' => '✅',
         ],
         [
-            'label' => 'Todas',
+            'label' => 'Resumen',
             'route' => 'all',
             'icon' => '📚',
         ],
