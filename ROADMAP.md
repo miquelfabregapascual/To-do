@@ -1,19 +1,33 @@
+# Roadmap — Weekly Planner First
 
-## 🟥 P0 
+This is the canonical backlog with acceptance criteria.
+If you prefer a board view, see the read-only Trello: https://trello.com/b/Rh7nw7dB/to-do
+
+**How to work (for automations like Codex):**
+- One task = one branch = one PR
+- Branch: `feat/<task-number>-<kebab-title>` (e.g., `feat/01-leer-mas-responsive`)
+- Conventional Commits
+- Every PR includes: summary, implementation notes, **screenshots (desktop + mobile)**, and checks all **Done when** boxes
+- Scope strictly to the task; no drive-by refactors
+
+---
+
+## 🟥 P0 — Must-have
+
 1. **Responsive & accessible “Leer más”**  
-**Done when:** Long descriptions truncate (line clamp), “Leer más/menos” toggles without a modal, keyboard accessible, works on mobile & desktop.
+**Done when:** Long descriptions truncate (line clamp); “Leer más/menos” toggles without a modal; keyboard accessible; mobile & desktop OK.
 
 2. **Differentiate list sections (Inbox / Today / Completed / All)**  
-**Done when:** Each route has its own query + Blade/Component with distinct purpose; “All” is either removed or clearly differentiated.
+**Done when:** Each route has its own query + Blade/Component with a distinct purpose; “All” is removed or clearly differentiated.
 
 3. **Weekly Planner workspace (true calendar grid)**  
-**Done when:** 7-column week grid; drag task from backlog into a day; items persist.
+**Done when:** 7-column week grid; drag tasks from a backlog list into a day; items persist.
 
 4. **Recurring weekly commitments / anchors**  
 **Done when:** Data model for recurring blocks; new weeks auto-populate; can skip/delete a single week instance.
 
 5. **Weekly review + analytics panel**  
-**Done when:** End-of-week page shows: planned vs completed, carry-overs, simple charts/metrics.
+**Done when:** End-of-week page shows planned vs completed, carry-overs, simple charts/metrics.
 
 6. **Guided “Plan next week” wizard**  
 **Done when:** Flow: review last week → pick goals → add anchors → schedule key tasks → create next week.
@@ -32,15 +46,16 @@
 
 ---
 
-## 🟧 P1 
+## 🟧 P1 — Should-have
+
 11. **Week templates & cloning**  
-**Done when:** Can clone a past week or start from a named template.
+**Done when:** Clone a past week or start from a named template.
 
 12. **Quick-add + natural language capture**  
 **Done when:** Input like `Call Anna Mon 10:00 #work p2` parses to fields; fallback to Inbox if parse fails.
 
 13. **Keyboard shortcuts & help overlay**  
-**Done when:** N (new), / (search), G W (Planner), G T (Today), E (edit), S (schedule); “?” shows cheat-sheet.
+**Done when:** N (new), / (search), G W (Planner), G T (Today), E (edit), S (schedule); `?` shows cheat-sheet.
 
 14. **Weekly goals / focus areas linked to tasks**  
 **Done when:** Goals created per week; tasks can link to a goal; goals appear in Planner header.
@@ -61,11 +76,12 @@
 **Done when:** Theme (light/dark), time format, week-start day, notification toggle persist.
 
 20. **Guided “Focus mode” for Today view**  
-**Done when:** Start a focus session/Pomodoro, quick snooze/defer, minimal UI.
+**Done when:** Start a focus session/Pomodoro; quick snooze/defer; minimal UI.
 
 ---
 
-## 🟩 P2 
+## 🟩 P2 — Nice-to-have
+
 21. **Analytics history (streaks & trends)**  
 **Done when:** 4–8 week history: completion rate, streaks, carry-over trend.
 
@@ -73,10 +89,10 @@
 **Done when:** Import CSV to Inbox; export filtered lists/weeks.
 
 23. **Theming & accessibility settings**  
-**Done when:** High-contrast mode, font scale, ARIA passes basic checks.
+**Done when:** High-contrast mode; font scale; ARIA basics pass.
 
 24. **Week capacity indicator & time budgeting**  
-**Done when:** Show capacity bar per day/week; warn when overbooked.
+**Done when:** Capacity bar per day/week; warn when overbooked.
 
 25. **Optional AI assist to suggest schedule balance**  
 **Done when:** Button suggests distributing backlog into the week; non-destructive preview.
