@@ -1,11 +1,11 @@
-{{-- resources/views/components/task-description.blade.php --}}
+    {{-- resources/views/components/task-description.blade.php --}}
 @props([
     'text' => '',
     'title' => '',
     'taskId' => null,
     'limit' => 200,
     'readMoreLabel' => 'Leer más',
-    'closeLabel' => 'Leer menos',
+    'closeLabel' => 'leer menos',
     'paragraphClass' => 'mt-1',
 ])
 
