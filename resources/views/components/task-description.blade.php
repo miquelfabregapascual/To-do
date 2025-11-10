@@ -5,7 +5,7 @@
     'taskId' => null,
     'limit' => 200,
     'readMoreLabel' => 'Leer más',
-    'closeLabel' => 'Cerrar',
+    'readLessLabel' => 'Leer menos',
     'paragraphClass' => 'mt-1',
 ])
 
@@ -16,44 +16,38 @@
     if ($hasText) {
         $length = function_exists('mb_strlen') ? mb_strlen($cleanText) : strlen($cleanText);
         $shouldClamp = $length > $limit;
-        $identifier = $taskId
+        $descriptionId = ($taskId
             ? 'task-desc-' . $taskId
-            : 'task-desc-' . substr(md5($cleanText), 0, 10);
+            : 'task-desc-' . substr(md5($cleanText), 0, 10)) . '-content';
     }
 @endphp
 
 @if ($hasText)
-    <div class="space-y-1">
-        <p class="text-xs text-gray-300 break-words whitespace-pre-wrap {{ ($shouldClamp ?? false) ? 'clamp-resp' : '' }} {{ $paragraphClass }}">
+    <div
+        x-data="{ expanded: false, readMore: @js($readMoreLabel), readLess: @js($readLessLabel) }"
+        class="space-y-1"
+    >
+        <p
+            id="{{ $descriptionId ?? '' }}"
+            class="text-xs text-gray-300 break-words whitespace-pre-wrap {{ ($shouldClamp ?? false) ? 'clamp-resp' : '' }} {{ $paragraphClass }}"
+            @if (!empty($shouldClamp) && $shouldClamp)
+                x-bind:class="{ 'clamp-resp': !expanded }"
+            @endif
+        >
             {{ $cleanText }}
         </p>
 
         @if (!empty($shouldClamp) && $shouldClamp)
-            <a href="#{{ $identifier }}"
-               class="text-blue-400 text-xs inline-flex items-center gap-1 underline hover:text-blue-300">
-                {{ $readMoreLabel }}
-            </a>
-
-            <div id="{{ $identifier }}" class="modal" aria-hidden="true">
-                <a href="#" class="absolute inset-0" aria-label="{{ $closeLabel }}"></a>
-                <div class="modal-card" role="dialog" aria-modal="true" @if ($title) aria-labelledby="{{ $identifier }}-title" @endif>
-                    <a href="#" class="modal-close" aria-label="{{ $closeLabel }}">×</a>
-
-                    @if ($title)
-                        <h5 id="{{ $identifier }}-title" class="text-base font-semibold mb-2">{{ $title }}</h5>
-                    @endif
-
-                    <div class="text-sm whitespace-pre-wrap break-words">
-                        {{ $cleanText }}
-                    </div>
-
-                    <div class="mt-4 text-right">
-                        <a href="#" class="inline-block px-3 py-1.5 rounded bg-gray-700 hover:bg-gray-600 text-gray-100">
-                            {{ $closeLabel }}
-                        </a>
-                    </div>
-                </div>
-            </div>
+            <button
+                type="button"
+                class="text-blue-400 text-xs inline-flex items-center gap-1 underline hover:text-blue-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
+                aria-expanded="false"
+                x-bind:aria-expanded="expanded"
+                aria-controls="{{ $descriptionId }}"
+                x-on:click="expanded = !expanded"
+            >
+                <span x-text="expanded ? readLess : readMore">{{ $readMoreLabel }}</span>
+            </button>
         @endif
     </div>
 @endif
