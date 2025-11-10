@@ -15,10 +15,10 @@ If you prefer a board view, see the read-only Trello: https://trello.com/b/Rh7nw
 ## 🟥 P0 — Must-have
 
 1. **Responsive & accessible “Leer más”**  
-**Done when:** Long descriptions truncate (line clamp); “Leer más/menos” toggles without a modal; keyboard accessible; mobile & desktop OK.
+**Done when:10/11/2025** Long descriptions truncate (line clamp); “Leer más/menos” toggles without a modal; keyboard accessible; mobile & desktop OK.
 
 2. **Differentiate list sections (Inbox / Today / Completed / All)**  
-**Done when:** Each route has its own query + Blade/Component with a distinct purpose; “All” is removed or clearly differentiated.
+**Done when:10/11/2025** Each route has its own query + Blade/Component with a distinct purpose; “All” is removed or clearly differentiated.
 
 3. **Weekly Planner workspace (true calendar grid)**  
 **Done when:** 7-column week grid; drag tasks from a backlog list into a day; items persist.
