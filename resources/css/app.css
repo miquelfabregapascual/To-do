@@ -51,12 +51,13 @@ button,
     .clamp-resp { -webkit-line-clamp: 4; }
   }
 
- [data-description-wrapper][data-expanded="true"] [data-description-text] {
+  [data-description-wrapper][data-expanded="true"] [data-description-text] {
     display: block;
     -webkit-line-clamp: unset;
     -webkit-box-orient: unset;
     overflow: visible;
   }
+
   /* Calendar grid behaves like Todoist: 7 equal columns on wide; scrollable on small */
   .calendar-grid {
     @apply grid gap-3;
