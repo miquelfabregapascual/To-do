@@ -5,7 +5,7 @@
     'taskId' => null,
     'limit' => 200,
     'readMoreLabel' => 'Leer más',
-    'closeLabel' => 'Cerrar',
+    'closeLabel' => 'Leer menos',
     'paragraphClass' => 'mt-1',
 ])
 
@@ -23,37 +23,27 @@
 @endphp
 
 @if ($hasText)
-    <div class="space-y-1">
-        <p class="text-xs text-gray-300 break-words whitespace-pre-wrap {{ ($shouldClamp ?? false) ? 'clamp-resp' : '' }} {{ $paragraphClass }}">
+    <div class="space-y-1" @if(!empty($shouldClamp) && $shouldClamp) id="{{ $identifier }}" data-description-wrapper data-expanded="false" @endif>
+        <p
+            class="text-xs text-gray-300 break-words whitespace-pre-wrap {{ ($shouldClamp ?? false) ? 'clamp-resp' : '' }} {{ $paragraphClass }}"
+            @if(!empty($shouldClamp) && $shouldClamp) id="{{ $identifier }}-text" data-description-text @endif
+        >
             {{ $cleanText }}
         </p>
 
         @if (!empty($shouldClamp) && $shouldClamp)
-            <a href="#{{ $identifier }}"
-               class="text-blue-400 text-xs inline-flex items-center gap-1 underline hover:text-blue-300">
-                {{ $readMoreLabel }}
-            </a>
-
-            <div id="{{ $identifier }}" class="modal" aria-hidden="true">
-                <a href="#" class="absolute inset-0" aria-label="{{ $closeLabel }}"></a>
-                <div class="modal-card" role="dialog" aria-modal="true" @if ($title) aria-labelledby="{{ $identifier }}-title" @endif>
-                    <a href="#" class="modal-close" aria-label="{{ $closeLabel }}">×</a>
-
-                    @if ($title)
-                        <h5 id="{{ $identifier }}-title" class="text-base font-semibold mb-2">{{ $title }}</h5>
-                    @endif
-
-                    <div class="text-sm whitespace-pre-wrap break-words">
-                        {{ $cleanText }}
-                    </div>
-
-                    <div class="mt-4 text-right">
-                        <a href="#" class="inline-block px-3 py-1.5 rounded bg-gray-700 hover:bg-gray-600 text-gray-100">
-                            {{ $closeLabel }}
-                        </a>
-                    </div>
-                </div>
-            </div>
+            <button
+                type="button"
+                class="text-blue-400 text-xs inline-flex items-center gap-1 underline hover:text-blue-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400 bg-transparent p-0"
+                data-read-more-toggle
+                data-target="{{ $identifier }}"
+                data-label-more="{{ $readMoreLabel }}"
+                data-label-less="{{ $closeLabel }}"
+                aria-expanded="false"
+                aria-controls="{{ $identifier }}-text"
+            >
+                <span data-toggle-label>{{ $readMoreLabel }}</span>
+            </button>
         @endif
     </div>
 @endif
