@@ -1,4 +1,4 @@
-{{-- resources/views/components/task-description.blade.php --}}
+    {{-- resources/views/components/task-description.blade.php --}}
 @props([
     'text' => '',
     'title' => '',
@@ -6,6 +6,7 @@
     'limit' => 200,
     'readMoreLabel' => 'Leer más',
     'readLessLabel' => 'Leer menos',
+    'closeLabel' => 'leer menos',
     'paragraphClass' => 'mt-1',
 ])
 
@@ -33,6 +34,10 @@
             @if (!empty($shouldClamp) && $shouldClamp)
                 x-bind:class="{ 'clamp-resp': !expanded }"
             @endif
+    <div class="space-y-1" @if(!empty($shouldClamp) && $shouldClamp) id="{{ $identifier }}" data-description-wrapper data-expanded="false" @endif>
+        <p
+            class="text-xs text-gray-300 break-words whitespace-pre-wrap {{ ($shouldClamp ?? false) ? 'clamp-resp' : '' }} {{ $paragraphClass }}"
+            @if(!empty($shouldClamp) && $shouldClamp) id="{{ $identifier }}-text" data-description-text @endif
         >
             {{ $cleanText }}
         </p>
@@ -47,6 +52,15 @@
                 x-on:click="expanded = !expanded"
             >
                 <span x-text="expanded ? readLess : readMore">{{ $readMoreLabel }}</span>
+                class="text-blue-400 text-xs inline-flex items-center gap-1 underline hover:text-blue-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400 bg-transparent p-0"
+                data-read-more-toggle
+                data-target="{{ $identifier }}"
+                data-label-more="{{ $readMoreLabel }}"
+                data-label-less="{{ $closeLabel }}"
+                aria-expanded="false"
+                aria-controls="{{ $identifier }}-text"
+            >
+                <span data-toggle-label>{{ $readMoreLabel }}</span>
             </button>
         @endif
     </div>
