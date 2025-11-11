@@ -21,7 +21,7 @@ If you prefer a board view, see the read-only Trello: https://trello.com/b/Rh7nw
 **Done when:10/11/2025** Each route has its own query + Blade/Component with a distinct purpose; “All” is removed or clearly differentiated.
 
 3. **Weekly Planner workspace (true calendar grid)**  
-**Done when:** 7-column week grid; drag tasks from a backlog list into a day; items persist.
+**Done when:10/11/2025** 7-column week grid; drag tasks from a backlog list into a day; items persist.
 
 4. **Recurring weekly commitments / anchors**  
 **Done when:** Data model for recurring blocks; new weeks auto-populate; can skip/delete a single week instance.
