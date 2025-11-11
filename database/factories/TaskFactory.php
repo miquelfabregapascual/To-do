@@ -21,10 +21,6 @@ class TaskFactory extends Factory
             'description' => $this->faker->optional()->paragraph(),
             'due_date' => $this->faker->dateTimeBetween('now', '+2 weeks')->format('Y-m-d'),
             'completed' => $this->faker->boolean(20),
-            'is_anchor' => false,
-            'recurring_anchor_id' => null,
-            'anchor_start_time' => null,
-            'anchor_end_time' => null,
         ];
     }
 
