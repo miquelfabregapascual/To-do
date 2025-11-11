@@ -97,10 +97,10 @@
                         </form>
                     </section>
 
-                    <div class="grid gap-6 xl:grid-cols-[minmax(260px,320px)_1fr]">
+                    <div class="grid gap-6 lg:grid-cols-[minmax(220px,260px)_minmax(0,1fr)] xl:grid-cols-[minmax(240px,280px)_minmax(0,1fr)] lg:items-start">
                         {{-- Backlog column --}}
                         <aside
-                            class="space-y-4"
+                            class="space-y-4 lg:sticky lg:top-28"
                             data-drop-backlog="true"
                         >
                             <div class="bg-gray-800/90 border border-gray-700 rounded-lg p-4">
@@ -164,7 +164,7 @@
                         </aside>
 
                         {{-- Week grid --}}
-                        <section class="space-y-6">
+                        <section class="space-y-6 min-w-0">
                             {{-- === Calendar Navigation === --}}
                             @php $today = now()->startOfDay(); @endphp
                             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -201,7 +201,7 @@
                             </div>
 
                             <div class="overflow-x-auto pb-2">
-                                <div class="grid min-w-[960px] grid-cols-7 gap-4">
+                                <div class="grid grid-flow-col auto-cols-[minmax(220px,1fr)] md:auto-cols-[minmax(240px,1fr)] xl:auto-cols-[minmax(220px,1fr)] gap-4 min-w-full">
                                     @foreach ($days as $day)
                                         @php
                                             $isToday = $day->isSameDay($today);
