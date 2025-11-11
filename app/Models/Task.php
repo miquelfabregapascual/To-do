@@ -20,10 +20,6 @@ class Task extends Model
         'description',
         'due_date',
         'completed',
-        'is_anchor',
-        'recurring_anchor_id',
-        'anchor_start_time',
-        'anchor_end_time',
     ];
 
     /**
@@ -33,7 +29,6 @@ class Task extends Model
      */
     protected $attributes = [
         'completed' => false,
-        'is_anchor' => false,
     ];
 
     /**
@@ -44,9 +39,6 @@ class Task extends Model
     protected $casts = [
         'completed' => 'boolean',
         'due_date' => 'date',
-        'is_anchor' => 'boolean',
-        'anchor_start_time' => 'datetime:H:i:s',
-        'anchor_end_time' => 'datetime:H:i:s',
     ];
 
     /**
@@ -57,15 +49,5 @@ class Task extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Recurring anchor that produced this task, if any.
-     *
-     * @return BelongsTo<RecurringAnchor, self>
-     */
-    public function recurringAnchor(): BelongsTo
-    {
-        return $this->belongsTo(RecurringAnchor::class);
     }
 }

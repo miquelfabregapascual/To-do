@@ -5,7 +5,6 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -75,25 +74,5 @@ class User extends Authenticatable
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
-    }
-
-    /**
-     * Recurring anchor patterns owned by the user.
-     *
-     * @return HasMany<RecurringAnchor>
-     */
-    public function recurringAnchors(): HasMany
-    {
-        return $this->hasMany(RecurringAnchor::class);
-    }
-
-    /**
-     * Exceptions linked to the user's anchors.
-     *
-     * @return HasManyThrough<AnchorException>
-     */
-    public function anchorExceptions(): HasManyThrough
-    {
-        return $this->hasManyThrough(AnchorException::class, RecurringAnchor::class);
     }
 }

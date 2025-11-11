@@ -2,21 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AnchorException;
 use App\Models\Task;
 use App\Models\User;
-use App\Services\RecurringAnchorService;
 use Carbon\Carbon;
-use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
-    public function __construct(private readonly RecurringAnchorService $recurringAnchorService)
-    {
-    }
-
     public function index(Request $request)
     {
         /** @var User|null $user */
@@ -30,32 +23,19 @@ class TaskController extends Controller
         $weekStart = Carbon::now()->startOfWeek(Carbon::MONDAY)->addWeeks($weekOffset)->startOfDay();
         $weekEnd = (clone $weekStart)->endOfWeek(Carbon::SUNDAY)->endOfDay();
 
-        if (config('planner.anchors.enabled')) {
-            $this->recurringAnchorService->materializeWeek(
-                $user,
-                CarbonPeriod::create((clone $weekStart), '1 day', (clone $weekEnd))
-            );
-        }
-
         // Mon..Sun collection
         $days = collect();
         for ($i = 0; $i < 7; $i++) {
             $days->push((clone $weekStart)->addDays($i));
         }
 
-        $tasksQuery = Task::where('user_id', $user->id)
+        $tasks = Task::where('user_id', $user->id)
             ->whereNotNull('due_date')
             ->whereBetween('due_date', [
                 $weekStart->toDateString(),
                 $weekEnd->toDateString(),
             ])
-            ->where('completed', false);
-
-        if (! config('planner.anchors.enabled')) {
-            $tasksQuery->where('is_anchor', false);
-        }
-
-        $tasks = $tasksQuery
+            ->where('completed', false)
             ->orderBy('due_date')
             ->orderBy('created_at')
             ->get();
@@ -68,7 +48,6 @@ class TaskController extends Controller
         $backlog = Task::where('user_id', $user->id)
             ->whereNull('due_date')
             ->where('completed', false)
-            ->where('is_anchor', false)
             ->latest('created_at')
             ->get();
 
@@ -114,7 +93,6 @@ class TaskController extends Controller
     public function toggle(Task $task)
     {
         abort_unless($task->user_id === Auth::id(), 403);
-        abort_if($task->is_anchor, 422, 'Anchors cannot be toggled.');
 
         $task->completed = ! $task->completed;
         $task->save();
@@ -125,18 +103,6 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         abort_unless($task->user_id === Auth::id(), 403);
-
-        if ($task->is_anchor && $task->recurring_anchor_id && $task->due_date) {
-            AnchorException::firstOrCreate(
-                [
-                    'recurring_anchor_id' => $task->recurring_anchor_id,
-                    'anchor_date' => $task->due_date->toDateString(),
-                ],
-                [
-                    'action' => AnchorException::ACTION_SKIP,
-                ]
-            );
-        }
 
         $task->delete();
 
@@ -158,8 +124,6 @@ class TaskController extends Controller
             ->where('user_id', $user->id)
             ->firstOrFail();
 
-        abort_if($task->is_anchor, 422, 'Anchors cannot be rescheduled.');
-
         $task->due_date = $validated['due_date']
             ? Carbon::parse($validated['due_date'])->toDateString()
             : null;
@@ -179,14 +143,12 @@ class TaskController extends Controller
         $unscheduled = Task::where('user_id', $user->id)
             ->whereNull('due_date')
             ->where('completed', false)
-            ->where('is_anchor', false)
             ->latest('created_at')
             ->get();
 
         $scheduledSoon = Task::where('user_id', $user->id)
             ->whereNotNull('due_date')
             ->where('completed', false)
-            ->where('is_anchor', false)
             ->orderBy('due_date')
             ->limit(5)
             ->get();
@@ -205,7 +167,6 @@ class TaskController extends Controller
         $overdue = Task::where('user_id', $user->id)
             ->whereNotNull('due_date')
             ->where('completed', false)
-            ->where('is_anchor', false)
             ->whereDate('due_date', '<', $today)
             ->orderBy('due_date')
             ->get();
@@ -213,7 +174,6 @@ class TaskController extends Controller
         $todayTasks = Task::where('user_id', $user->id)
             ->whereNotNull('due_date')
             ->where('completed', false)
-            ->where('is_anchor', false)
             ->whereDate('due_date', $today)
             ->orderBy('created_at')
             ->get();
@@ -231,7 +191,6 @@ class TaskController extends Controller
 
         $completedTasks = Task::where('user_id', $user->id)
             ->where('completed', true)
-            ->where('is_anchor', false)
             ->orderByDesc('updated_at')
             ->get();
 
@@ -260,7 +219,6 @@ class TaskController extends Controller
         $overdue = Task::where('user_id', $user->id)
             ->whereNotNull('due_date')
             ->where('completed', false)
-            ->where('is_anchor', false)
             ->whereDate('due_date', '<', $today)
             ->orderBy('due_date')
             ->get();
@@ -268,7 +226,6 @@ class TaskController extends Controller
         $upcoming = Task::where('user_id', $user->id)
             ->whereNotNull('due_date')
             ->where('completed', false)
-            ->where('is_anchor', false)
             ->whereBetween('due_date', [$today, (clone $today)->addDays(7)])
             ->orderBy('due_date')
             ->get();
@@ -276,13 +233,11 @@ class TaskController extends Controller
         $unscheduled = Task::where('user_id', $user->id)
             ->whereNull('due_date')
             ->where('completed', false)
-            ->where('is_anchor', false)
             ->latest('created_at')
             ->get();
 
         $recentlyCompleted = Task::where('user_id', $user->id)
             ->where('completed', true)
-            ->where('is_anchor', false)
             ->orderByDesc('updated_at')
             ->limit(6)
             ->get();
