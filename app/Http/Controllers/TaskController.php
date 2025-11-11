@@ -30,17 +30,26 @@ class TaskController extends Controller
         }
 
         $tasks = Task::where('user_id', $user->id)
-            ->whereDate('due_date', '>=', $weekStart->toDateString())
-            ->whereDate('due_date', '<=', $weekEnd->toDateString())
+            ->whereNotNull('due_date')
+            ->whereBetween('due_date', [
+                $weekStart->toDateString(),
+                $weekEnd->toDateString(),
+            ])
+            ->where('completed', false)
             ->orderBy('due_date')
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at')
             ->get();
 
         // Group tasks by day key YYYY-MM-DD so Blade can display correctly
         $tasksByDate = $tasks->groupBy(function (Task $t) {
-            return optional($t->due_date)->toDateString()
-                ?? Carbon::parse($t->created_at)->toDateString();
+            return optional($t->due_date)->toDateString();
         });
+
+        $backlog = Task::where('user_id', $user->id)
+            ->whereNull('due_date')
+            ->where('completed', false)
+            ->latest('created_at')
+            ->get();
 
         return view('dashboard', [
             'tasks' => $tasks,
@@ -49,6 +58,7 @@ class TaskController extends Controller
             'weekOffset' => $weekOffset,
             'weekStart' => $weekStart,
             'weekEnd' => $weekEnd,
+            'backlog' => $backlog,
         ]);
     }
 
@@ -62,7 +72,7 @@ class TaskController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'due_date' => 'required|date|after_or_equal:today',
+            'due_date' => 'nullable|date|after_or_equal:today',
         ]);
 
         /** @var User $user */
@@ -71,7 +81,9 @@ class TaskController extends Controller
         $user->tasks()->create([
             'title' => $request->title,
             'description' => $request->description,
-            'due_date' => Carbon::parse($request->due_date)->toDateString(),
+            'due_date' => $request->filled('due_date')
+                ? Carbon::parse($request->due_date)->toDateString()
+                : null,
             'completed' => false,
         ]);
 
@@ -95,6 +107,33 @@ class TaskController extends Controller
         $task->delete();
 
         return back()->with('success', 'Task deleted successfully.');
+    }
+
+    public function schedule(Request $request)
+    {
+        $validated = $request->validate([
+            'task_id' => ['required', 'integer', 'exists:tasks,id'],
+            'due_date' => ['nullable', 'date'],
+        ]);
+
+        /** @var User|null $user */
+        $user = Auth::user();
+        abort_unless($user, 403);
+
+        $task = Task::where('id', $validated['task_id'])
+            ->where('user_id', $user->id)
+            ->firstOrFail();
+
+        $task->due_date = $validated['due_date']
+            ? Carbon::parse($validated['due_date'])->toDateString()
+            : null;
+        $task->save();
+
+        if ($request->wantsJson()) {
+            return response()->json(['status' => 'ok']);
+        }
+
+        return back()->with('success', 'Task rescheduled.');
     }
 
     public function inbox()
