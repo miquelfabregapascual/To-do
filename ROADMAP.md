@@ -16,7 +16,7 @@ If you prefer a board view, see the read-only Trello: https://trello.com/b/Rh7nw
 Each task defines **Done when**, meaning:  
 ✅ The task is complete only if **all points are true.**  
 It’s the “definition of done,” not a date or deadline.  
-Codex (or any contributor) should use it to validate whether a feature is ready to merge.
+any contributor should use it to validate whether a feature is ready to merge.
 
 ---
 
