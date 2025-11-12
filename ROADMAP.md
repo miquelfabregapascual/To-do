@@ -1,98 +1,160 @@
 # Roadmap — Weekly Planner First
 
-This is the canonical backlog with acceptance criteria.
+This is the canonical backlog with acceptance criteria.  
 If you prefer a board view, see the read-only Trello: https://trello.com/b/Rh7nw7dB/to-do
 
-**How to work (for automations like Codex):**
-- One task = one branch = one PR
-- Branch: `feat/<task-number>-<kebab-title>` (e.g., `feat/01-leer-mas-responsive`)
-- Conventional Commits
-- Every PR includes: summary, implementation notes, **screenshots (desktop + mobile)**, and checks all **Done when** boxes
-- Scope strictly to the task; no drive-by refactors
+---
+
+### 💡 How to work (for automations like Codex)
+- One task = one branch = one PR  
+- Branch: `feat/<task-number>-<kebab-title>` (e.g., `feat/01-leer-mas-responsive`)  
+- Use **Conventional Commits**.  
+- Every PR includes: summary, implementation notes, **screenshots (desktop + mobile)**, and checks all **Done when** boxes.  
+- Scope strictly to the task; **no drive-by refactors.**
+
+### 🧭 About “Done when”
+Each task defines **Done when**, meaning:  
+✅ The task is complete only if **all points are true.**  
+It’s the “definition of done,” not a date or deadline.  
+any contributor should use it to validate whether a feature is ready to merge.
 
 ---
 
 ## 🟥 P0 — Must-have
 
 1. **Responsive & accessible “Leer más”**  
-**Done when:10/11/2025** Long descriptions truncate (line clamp); “Leer más/menos” toggles without a modal; keyboard accessible; mobile & desktop OK.
+**Done when:**  
+- Long descriptions truncate (CSS line clamp).  
+- “Leer más/menos” toggles text expansion inline (no modal).  
+- Works with keyboard navigation and screen readers.  
+- Responsive on mobile and desktop.
 
 2. **Differentiate list sections (Inbox / Today / Completed / All)**  
-**Done when:10/11/2025** Each route has its own query + Blade/Component with a distinct purpose; “All” is removed or clearly differentiated.
+**Done when:**  
+- Each route has its own query and Blade/Component.  
+- “All” is either removed or clearly distinct in purpose.  
+- Each view’s purpose is clear to the user.
 
 3. **Weekly Planner workspace (true calendar grid)**  
-**Done when:** 7-column week grid; drag tasks from a backlog list into a day; items persist.
+**Done when:**  
+- 7-column week grid layout.  
+- Tasks can be dragged from backlog into a day.  
+- Assigned tasks persist correctly after reload.
 
 4. **Recurring weekly commitments / anchors**  
-**Done when:** Data model for recurring blocks; new weeks auto-populate; can skip/delete a single week instance.
+**Done when:**  
+- Data model for recurring blocks exists.  
+- New weeks auto-populate recurring anchors.  
+- Single-week exceptions (skip/delete) are possible.  
 
 5. **Weekly review + analytics panel**  
-**Done when:** End-of-week page shows planned vs completed, carry-overs, simple charts/metrics.
+**Done when:**  
+- End-of-week page shows: planned vs completed, carry-overs, simple charts/metrics.  
+- Data aggregates correctly across tasks.  
+- View accessible via navigation or summary link.
 
 6. **Guided “Plan next week” wizard**  
-**Done when:** Flow: review last week → pick goals → add anchors → schedule key tasks → create next week.
+**Done when:**  
+- Multi-step flow: review → set goals → add anchors → schedule → confirm new week.  
+- Progress saves between steps.  
+- UI matches overall app theme.
 
 7. **Backlog / Inbox triage flow**  
-**Done when:** Dedicated Backlog view; quick actions: schedule to week/day, set priority/labels, move to Inbox/Archive.
+**Done when:**  
+- Dedicated Backlog view exists.  
+- Quick actions: schedule, set priority, assign labels, move to Inbox/Archive.  
+- Persistent updates (no page reload).
 
 8. **Task detail drawer (rich edit in place)**  
-**Done when:** Slide-over with title, notes (md), labels, priority, estimate, subtasks, schedule button.
+**Done when:**  
+- Slide-over drawer with title, notes (markdown), labels, priority, subtasks, schedule button.  
+- Inline save (AJAX).  
+- Works on both desktop and mobile.
 
 9. **Mobile-first layout & navigation fixes**  
-**Done when:** Planner grid and lists adapt cleanly to small screens; bottom nav; no hover-only interactions.
+**Done when:**  
+- Planner grid and task lists adapt cleanly to small screens.  
+- Bottom navigation visible on mobile.  
+- No hover-only interactions; tap alternatives exist.
 
 10. **Restructure primary navigation for planner focus**  
-**Done when:** Menu = Planner (default), Today, Inbox, Backlog, Completed, Settings; each route purposeful.
+**Done when:**  
+- Left menu = Planner (default), Today, Inbox, Backlog, Completed, Settings.  
+- Each route serves a distinct function.  
+- Navigation visually consistent and responsive.
+
+---
+
+### 🔒 New Must-haves (Auth & UX polish)
+
+11. **Auth flow & styling consistency (Login / Register / Logout)**  
+**Done when:**  
+- Logout redirects to Login page.  
+- Login page includes link to Register.  
+- Register page includes link back to Login.  
+- All three (Login, Register, Logout target) share consistent app styling/layout.  
+- Keyboard focus lands on first input; all links are tab-accessible.  
+- Verified on desktop and mobile; no console or network errors.
+
+12. **Settings vs Profile: unified UX + theme preference**  
+**Done when:**  
+- Settings hub exists at `/settings`.  
+- Profile lives under `/settings/profile` and reuses Jetstream forms (name, email, phone, password, 2FA).  
+- Top-right “Edit Profile” redirects to `/settings/profile`.  
+- Left menu “Settings” goes to `/settings` or `/settings/profile`.  
+- Add **Theme** preference (Light/Dark) under `/settings/preferences`; choice persists via DB or JSON column.  
+- Consistent design and layout across all Settings pages.  
+- Desktop & mobile verified; no console errors.
 
 ---
 
 ## 🟧 P1 — Should-have
 
-11. **Week templates & cloning**  
+13. **Week templates & cloning**  
 **Done when:** Clone a past week or start from a named template.
 
-12. **Quick-add + natural language capture**  
-**Done when:** Input like `Call Anna Mon 10:00 #work p2` parses to fields; fallback to Inbox if parse fails.
+14. **Quick-add + natural language capture**  
+**Done when:** Input like `Call Anna Mon 10:00 #work p2` parses correctly to fields.
 
-13. **Keyboard shortcuts & help overlay**  
-**Done when:** N (new), / (search), G W (Planner), G T (Today), E (edit), S (schedule); `?` shows cheat-sheet.
+15. **Keyboard shortcuts & help overlay**  
+**Done when:** `N`, `/`, `G W`, `G T`, `E`, `S` work; `?` opens cheat-sheet.
 
-14. **Weekly goals / focus areas linked to tasks**  
-**Done when:** Goals created per week; tasks can link to a goal; goals appear in Planner header.
+16. **Weekly goals / focus areas linked to tasks**  
+**Done when:** Goals per week; tasks can link; goals visible in Planner header.
 
-15. **Extend task model with planning metadata**  
-**Done when:** Add priority (1–4), estimate_minutes, labels, project_id, due_date; UI uses them.
+17. **Extend task model with planning metadata**  
+**Done when:** Add priority (1–4), estimate_minutes, labels, project_id, due_date; reflected in UI.
 
-16. **Weekly progress insights & load projection**  
+18. **Weekly progress insights & load projection**  
 **Done when:** Show estimated load vs available time; highlight overload days.
 
-17. **Calendar sync and reminders**  
-**Done when:** Export ICS; optional browser/email reminders per scheduled item.
+19. **Calendar sync and reminders**  
+**Done when:** Export ICS; optional browser/email reminders.
 
-18. **Categories / contexts (Work, Personal, …)**  
+20. **Categories / contexts (Work, Personal, …)**  
 **Done when:** Manage categories; filter Planner/Today; optional color coding.
 
-19. **Enable real Settings preferences**  
-**Done when:** Theme (light/dark), time format, week-start day, notification toggle persist.
+21. **Enable real Settings preferences**  
+**Done when:** Time format, week-start day, notification toggle persist. (Theme handled in P0/12.)
 
-20. **Guided “Focus mode” for Today view**  
-**Done when:** Start a focus session/Pomodoro; quick snooze/defer; minimal UI.
+22. **Guided “Focus mode” for Today view**  
+**Done when:** Start focus session/Pomodoro; quick snooze/defer; minimal UI.
 
 ---
 
 ## 🟩 P2 — Nice-to-have
 
-21. **Analytics history (streaks & trends)**  
+23. **Analytics history (streaks & trends)**  
 **Done when:** 4–8 week history: completion rate, streaks, carry-over trend.
 
-22. **Import / export (CSV / Todoist)**  
+24. **Import / export (CSV / Todoist)**  
 **Done when:** Import CSV to Inbox; export filtered lists/weeks.
 
-23. **Theming & accessibility settings**  
-**Done when:** High-contrast mode; font scale; ARIA basics pass.
+25. **Theming & accessibility settings**  
+**Done when:** High-contrast mode; font scale; ARIA checks pass.
 
-24. **Week capacity indicator & time budgeting**  
-**Done when:** Capacity bar per day/week; warn when overbooked.
+26. **Week capacity indicator & time budgeting**  
+**Done when:** Capacity bar per day/week; warns when overbooked.
 
-25. **Optional AI assist to suggest schedule balance**  
-**Done when:** Button suggests distributing backlog into the week; non-destructive preview.
+27. **Optional AI assist to suggest schedule balance**  
+**Done when:** Suggests distributing backlog across the week; non-destructive preview.
