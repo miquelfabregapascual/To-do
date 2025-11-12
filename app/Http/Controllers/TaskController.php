@@ -30,7 +30,10 @@ class TaskController extends Controller
         $weekStart = Carbon::now()->startOfWeek(Carbon::MONDAY)->addWeeks($weekOffset)->startOfDay();
         $weekEnd = (clone $weekStart)->endOfWeek(Carbon::SUNDAY)->endOfDay();
 
-        if (config('planner.anchors.enabled')) {
+        $anchorsSchemaReady = $this->recurringAnchorService->canUseAnchors();
+        $anchorsEnabled = $anchorsSchemaReady && config('planner.anchors.enabled');
+
+        if ($anchorsEnabled) {
             $this->recurringAnchorService->materializeWeek(
                 $user,
                 CarbonPeriod::create((clone $weekStart), '1 day', (clone $weekEnd))
@@ -51,7 +54,7 @@ class TaskController extends Controller
             ])
             ->where('completed', false);
 
-        if (! config('planner.anchors.enabled')) {
+        if (! $anchorsEnabled && $anchorsSchemaReady) {
             $tasksQuery->where('is_anchor', false);
         }
 
@@ -68,7 +71,7 @@ class TaskController extends Controller
         $backlog = Task::where('user_id', $user->id)
             ->whereNull('due_date')
             ->where('completed', false)
-            ->where('is_anchor', false)
+            ->when($anchorsSchemaReady, fn ($query) => $query->where('is_anchor', false))
             ->latest('created_at')
             ->get();
 
@@ -126,7 +129,12 @@ class TaskController extends Controller
     {
         abort_unless($task->user_id === Auth::id(), 403);
 
-        if ($task->is_anchor && $task->recurring_anchor_id && $task->due_date) {
+        if (
+            $this->recurringAnchorService->canUseAnchors()
+            && $task->is_anchor
+            && $task->recurring_anchor_id
+            && $task->due_date
+        ) {
             AnchorException::firstOrCreate(
                 [
                     'recurring_anchor_id' => $task->recurring_anchor_id,
@@ -175,18 +183,19 @@ class TaskController extends Controller
     public function inbox()
     {
         $user = auth()->user();
+        $anchorsSchemaReady = $this->recurringAnchorService->canUseAnchors();
 
         $unscheduled = Task::where('user_id', $user->id)
             ->whereNull('due_date')
             ->where('completed', false)
-            ->where('is_anchor', false)
+            ->when($anchorsSchemaReady, fn ($query) => $query->where('is_anchor', false))
             ->latest('created_at')
             ->get();
 
         $scheduledSoon = Task::where('user_id', $user->id)
             ->whereNotNull('due_date')
             ->where('completed', false)
-            ->where('is_anchor', false)
+            ->when($anchorsSchemaReady, fn ($query) => $query->where('is_anchor', false))
             ->orderBy('due_date')
             ->limit(5)
             ->get();
@@ -201,11 +210,12 @@ class TaskController extends Controller
     {
         $user = auth()->user();
         $today = Carbon::today();
+        $anchorsSchemaReady = $this->recurringAnchorService->canUseAnchors();
 
         $overdue = Task::where('user_id', $user->id)
             ->whereNotNull('due_date')
             ->where('completed', false)
-            ->where('is_anchor', false)
+            ->when($anchorsSchemaReady, fn ($query) => $query->where('is_anchor', false))
             ->whereDate('due_date', '<', $today)
             ->orderBy('due_date')
             ->get();
@@ -213,7 +223,7 @@ class TaskController extends Controller
         $todayTasks = Task::where('user_id', $user->id)
             ->whereNotNull('due_date')
             ->where('completed', false)
-            ->where('is_anchor', false)
+            ->when($anchorsSchemaReady, fn ($query) => $query->where('is_anchor', false))
             ->whereDate('due_date', $today)
             ->orderBy('created_at')
             ->get();
@@ -228,10 +238,11 @@ class TaskController extends Controller
     {
         $user = auth()->user();
         $today = Carbon::today();
+        $anchorsSchemaReady = $this->recurringAnchorService->canUseAnchors();
 
         $completedTasks = Task::where('user_id', $user->id)
             ->where('completed', true)
-            ->where('is_anchor', false)
+            ->when($anchorsSchemaReady, fn ($query) => $query->where('is_anchor', false))
             ->orderByDesc('updated_at')
             ->get();
 
@@ -257,13 +268,15 @@ class TaskController extends Controller
         $user = auth()->user();
         abort_unless($user, 403);
 
+        $anchorsSchemaReady = $this->recurringAnchorService->canUseAnchors();
+
         $weekOffset = (int) $request->query('week', -1);
         $weekStart = Carbon::now()->startOfWeek(Carbon::MONDAY)->addWeeks($weekOffset)->startOfDay();
         $weekEnd = (clone $weekStart)->endOfWeek(Carbon::SUNDAY)->endOfDay();
         $currentWeekStart = Carbon::now()->startOfWeek(Carbon::MONDAY)->startOfDay();
 
         $plannedTasks = Task::where('user_id', $user->id)
-            ->where('is_anchor', false)
+            ->when($anchorsSchemaReady, fn ($query) => $query->where('is_anchor', false))
             ->whereNotNull('due_date')
             ->whereBetween('due_date', [
                 $weekStart->toDateString(),
@@ -304,14 +317,14 @@ class TaskController extends Controller
         });
 
         $completedDuringWeek = Task::where('user_id', $user->id)
-            ->where('is_anchor', false)
+            ->when($anchorsSchemaReady, fn ($query) => $query->where('is_anchor', false))
             ->where('completed', true)
             ->whereBetween('updated_at', [$weekStart, $weekEnd])
             ->orderBy('updated_at')
             ->get();
 
         $createdDuringWeekCount = Task::where('user_id', $user->id)
-            ->where('is_anchor', false)
+            ->when($anchorsSchemaReady, fn ($query) => $query->where('is_anchor', false))
             ->whereBetween('created_at', [$weekStart, $weekEnd])
             ->count();
 
@@ -337,11 +350,12 @@ class TaskController extends Controller
     {
         $user = auth()->user();
         $today = Carbon::today();
+        $anchorsSchemaReady = $this->recurringAnchorService->canUseAnchors();
 
         $overdue = Task::where('user_id', $user->id)
             ->whereNotNull('due_date')
             ->where('completed', false)
-            ->where('is_anchor', false)
+            ->when($anchorsSchemaReady, fn ($query) => $query->where('is_anchor', false))
             ->whereDate('due_date', '<', $today)
             ->orderBy('due_date')
             ->get();
@@ -349,7 +363,7 @@ class TaskController extends Controller
         $upcoming = Task::where('user_id', $user->id)
             ->whereNotNull('due_date')
             ->where('completed', false)
-            ->where('is_anchor', false)
+            ->when($anchorsSchemaReady, fn ($query) => $query->where('is_anchor', false))
             ->whereBetween('due_date', [$today, (clone $today)->addDays(7)])
             ->orderBy('due_date')
             ->get();
@@ -357,13 +371,13 @@ class TaskController extends Controller
         $unscheduled = Task::where('user_id', $user->id)
             ->whereNull('due_date')
             ->where('completed', false)
-            ->where('is_anchor', false)
+            ->when($anchorsSchemaReady, fn ($query) => $query->where('is_anchor', false))
             ->latest('created_at')
             ->get();
 
         $recentlyCompleted = Task::where('user_id', $user->id)
             ->where('completed', true)
-            ->where('is_anchor', false)
+            ->when($anchorsSchemaReady, fn ($query) => $query->where('is_anchor', false))
             ->orderByDesc('updated_at')
             ->limit(6)
             ->get();

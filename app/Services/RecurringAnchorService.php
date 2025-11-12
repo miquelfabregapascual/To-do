@@ -9,6 +9,7 @@ use App\Models\User;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 
 class RecurringAnchorService
 {
@@ -21,6 +22,10 @@ class RecurringAnchorService
      */
     public function materializeWeek(User $user, CarbonPeriod $weekRange): Collection
     {
+        if (! $this->canUseAnchors()) {
+            return collect();
+        }
+
         $start = CarbonImmutable::make($weekRange->getStartDate())->startOfDay();
         $end = CarbonImmutable::make($weekRange->getEndDate())->endOfDay();
         $period = CarbonPeriod::create($start, '1 day', $end);
@@ -100,5 +105,26 @@ class RecurringAnchorService
         }
 
         return $materialized;
+    }
+
+    public function canUseAnchors(): bool
+    {
+        static $schemaReady;
+
+        if ($schemaReady !== null) {
+            return $schemaReady;
+        }
+
+        if (! Schema::hasTable('recurring_anchors') || ! Schema::hasTable('anchor_exceptions')) {
+            return $schemaReady = false;
+        }
+
+        foreach (['is_anchor', 'recurring_anchor_id', 'anchor_start_time', 'anchor_end_time'] as $column) {
+            if (! Schema::hasColumn('tasks', $column)) {
+                return $schemaReady = false;
+            }
+        }
+
+        return $schemaReady = true;
     }
 }
