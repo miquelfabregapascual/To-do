@@ -10,6 +10,15 @@ class Task extends Model
 {
     use HasFactory;
 
+    public const STAGE_BACKLOG = 'backlog';
+    public const STAGE_INBOX = 'inbox';
+    public const STAGE_ARCHIVED = 'archived';
+
+    public const PRIORITY_P1 = 1;
+    public const PRIORITY_P2 = 2;
+    public const PRIORITY_P3 = 3;
+    public const PRIORITY_P4 = 4;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -20,6 +29,13 @@ class Task extends Model
         'description',
         'due_date',
         'completed',
+        'stage',
+        'priority',
+        'labels',
+        'is_anchor',
+        'recurring_anchor_id',
+        'anchor_start_time',
+        'anchor_end_time',
     ];
 
     /**
@@ -29,6 +45,8 @@ class Task extends Model
      */
     protected $attributes = [
         'completed' => false,
+        'stage' => self::STAGE_BACKLOG,
+        'is_anchor' => false,
     ];
 
     /**
@@ -39,6 +57,11 @@ class Task extends Model
     protected $casts = [
         'completed' => 'boolean',
         'due_date' => 'date',
+        'priority' => 'integer',
+        'is_anchor' => 'boolean',
+        'labels' => 'array',
+        'anchor_start_time' => 'datetime:H:i:s',
+        'anchor_end_time' => 'datetime:H:i:s',
     ];
 
     /**
@@ -49,5 +72,15 @@ class Task extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Recurring anchor that produced this task, if any.
+     *
+     * @return BelongsTo<RecurringAnchor, self>
+     */
+    public function recurringAnchor(): BelongsTo
+    {
+        return $this->belongsTo(RecurringAnchor::class);
     }
 }
