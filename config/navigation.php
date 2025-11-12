@@ -34,6 +34,11 @@ return [
             'icon' => '📊',
         ],
         [
+            'label' => 'Planificar próxima semana',
+            'route' => 'plan-next-week',
+            'icon' => '🧭',
+        ],
+        [
             'label' => 'Ajustes',
             'route' => 'settings',
             'icon' => '⚙️',
