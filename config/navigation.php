@@ -29,6 +29,11 @@ return [
             'icon' => '📚',
         ],
         [
+            'label' => 'Revisión semanal',
+            'route' => 'weekly-review',
+            'icon' => '📊',
+        ],
+        [
             'label' => 'Ajustes',
             'route' => 'settings',
             'icon' => '⚙️',
