@@ -83,10 +83,6 @@ any contributor should use it to validate whether a feature is ready to merge.
 - Each route serves a distinct function.  
 - Navigation visually consistent and responsive.
 
----
-
-### 🔒 New Must-haves (Auth & UX polish)
-
 11. **Auth flow & styling consistency (Login / Register / Logout)**  
 **Done when:**  
 - Logout redirects to Login page.  
