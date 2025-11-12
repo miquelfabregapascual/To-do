@@ -79,6 +79,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Weekly planning goals owned by the user.
+     *
+     * @return HasMany<WeeklyGoal>
+     */
+    public function weeklyGoals(): HasMany
+    {
+        return $this->hasMany(WeeklyGoal::class);
+    }
+
+    /**
      * Recurring anchor patterns owned by the user.
      *
      * @return HasMany<RecurringAnchor>
