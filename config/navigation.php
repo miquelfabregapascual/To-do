@@ -29,6 +29,16 @@ return [
             'icon' => '📚',
         ],
         [
+            'label' => 'Revisión semanal',
+            'route' => 'weekly-review',
+            'icon' => '📊',
+        ],
+        [
+            'label' => 'Planificar próxima semana',
+            'route' => 'plan-next-week',
+            'icon' => '🧭',
+        ],
+        [
             'label' => 'Ajustes',
             'route' => 'settings',
             'icon' => '⚙️',
