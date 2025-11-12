@@ -12,6 +12,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/today',     [TaskController::class, 'today'])->name('today');
     Route::get('/completed', [TaskController::class, 'completed'])->name('completed');
     Route::get('/all',       [TaskController::class, 'all'])->name('all');
+    Route::get('/weekly-review', [TaskController::class, 'weeklyReview'])->name('weekly-review');
 
     // Optional settings page (simple placeholder view)
     Route::view('/settings', 'settings')->name('settings');
