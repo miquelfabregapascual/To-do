@@ -9,9 +9,9 @@
     <div class="py-8 bg-gray-900 min-h-screen text-gray-100">
         <div class="max-w-7xl mx-auto px-4">
 
-            <div class="grid grid-cols-12 gap-6">
+            <div class="flex flex-col xl:flex-row gap-6">
                 {{-- LEFT COLUMN: Backlog aligned with planner --}}
-                <aside class="col-span-12 md:col-span-3 space-y-6">
+                <aside class="space-y-6 xl:w-72 2xl:w-80 xl:flex-shrink-0">
                     {{-- Backlog --}}
                     <div class="lg:sticky lg:top-28">
                         <div class="bg-gray-800/90 border border-gray-700 rounded-lg p-4">
@@ -27,26 +27,26 @@
                                 </span>
                             </header>
 
-                            <div class="space-y-3" data-drop-backlog="true" data-backlog-list>
+                            <div class="space-y-4" data-drop-backlog="true" data-backlog-list>
                                 @forelse ($backlog as $task)
                                 <article
-                                    class="bg-gray-700/70 border border-gray-600 rounded-md p-3 cursor-default md:cursor-grab focus-within:ring-2 focus-within:ring-blue-500"
+                                    class="bg-gray-700/70 border border-gray-600 rounded-lg p-4 cursor-default md:cursor-grab focus-within:ring-2 focus-within:ring-blue-500"
                                     draggable="true"
                                     data-task-draggable="{{ $task->id }}"
                                     aria-grabbed="false">
                                     <div class="flex flex-col gap-2 min-w-0">
                                         <div class="flex items-start justify-between gap-3">
                                             <div class="min-w-0">
-                                                <h4 class="text-sm font-medium text-gray-100 truncate">{{ $task->title }}</h4>
+                                                <h4 class="text-sm font-semibold text-gray-100 truncate">{{ $task->title }}</h4>
                                                 <x-task-description
                                                     :text="$task->description"
                                                     :title="$task->title"
                                                     :task-id="$task->id"
-                                                    paragraph-class="mt-1 text-xs text-gray-300" />
+                                                    paragraph-class="mt-1 text-xs text-gray-300 leading-5" />
                                             </div>
                                         </div>
 
-                                        <div class="flex items-center justify-between gap-2 pt-2 border-t border-gray-600/60">
+                                        <div class="flex items-center justify-between gap-2 pt-3 border-t border-gray-600/60">
                                             <button
                                                 type="button"
                                                 class="text-[11px] text-blue-200 underline decoration-dotted hover:text-blue-100"
@@ -83,7 +83,7 @@
 
                 {{-- RIGHT COLUMN: Planner only (more space) --}}
                 <main
-                    class="col-span-12 md:col-span-9 space-y-6"
+                    class="flex-1 min-w-0 space-y-6"
                     data-planner-board
                     data-schedule-url="{{ route('planner.schedule') }}">
                     {{-- Flash message --}}
@@ -156,8 +156,8 @@
                     </div>
 
                     {{-- === Week grid (full width of right column) === --}}
-                    <div class="-mx-4 sm:mx-0">
-                        <div class="planner-week no-scrollbar px-2 sm:px-0">
+                    <div class="overflow-x-auto xl:overflow-visible">
+                        <div class="planner-week no-scrollbar pr-4 xl:pr-0">
                             @foreach ($days as $day)
                             @php
                             $isToday = $day->isSameDay($today);
@@ -166,41 +166,45 @@
                             $count = $dayTasks->count();
                             @endphp
 
-                            <section class="planner-day bg-gray-800/90 border border-gray-700 rounded-lg p-4 space-y-3 transition-all"
+                            <section class="planner-day bg-gray-800/90 border border-gray-700 rounded-xl p-5 space-y-4 transition-all"
                                 data-drop-date="{{ $dayKey }}">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-2">
-                                        <span class="uppercase text-xs tracking-wider text-gray-300">{{ $day->translatedFormat('l') }}</span>
-                                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full {{ $isToday ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200' }}">
-                                            {{ $day->translatedFormat('d') }}
-                                        </span>
-                                        <span class="text-xs text-gray-400">{{ $day->translatedFormat('M') }}</span>
+                                <header class="flex items-center justify-between gap-4">
+                                    <div class="flex flex-col gap-2">
+                                        <span class="text-xs font-semibold tracking-[0.18em] text-gray-400 uppercase">{{ $day->translatedFormat('l') }}</span>
+                                        <div class="inline-flex items-center gap-2">
+                                            <span class="inline-flex items-center justify-center rounded-full px-3 py-1 text-sm font-semibold {{ $isToday ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-100' }}">
+                                                {{ $day->translatedFormat('d M') }}
+                                            </span>
+                                            @if ($isToday)
+                                            <span class="text-xs font-medium text-blue-300">Hoy</span>
+                                            @endif
+                                        </div>
                                     </div>
-                                    <span class="inline-flex items-center justify-center min-w-[28px] h-6 px-2 text-xs rounded-full {{ $count ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300' }}">
+                                    <span class="inline-flex items-center justify-center min-w-[32px] h-7 px-2 text-xs font-semibold rounded-full {{ $count ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300' }}">
                                         {{ $count }}
                                     </span>
-                                </div>
+                                </header>
 
-                                <ol class="space-y-3 min-h-[160px]">
+                                <ol class="space-y-3 min-h-[200px]">
                                     @forelse ($dayTasks as $task)
-                                    <li class="group bg-gray-700/70 border border-gray-600 rounded-md p-3 overflow-hidden cursor-default md:cursor-grab"
+                                    <li class="group bg-gray-700/70 border border-gray-600 rounded-lg p-4 overflow-hidden cursor-default md:cursor-grab"
                                         draggable="true" data-task-draggable="{{ $task->id }}" aria-grabbed="false">
                                         <div class="flex flex-col gap-2 min-w-0">
                                             <div class="flex items-start justify-between gap-3">
                                                 <div class="min-w-0">
-                                                    <div class="text-sm font-medium text-gray-100 truncate">
+                                                    <div class="text-sm font-semibold text-gray-100 leading-5 truncate">
                                                         {{ $task->title }}
                                                     </div>
                                                     <x-task-description
                                                         :text="$task->description"
                                                         :title="$task->title"
                                                         :task-id="$task->id"
-                                                        paragraph-class="mt-1 text-xs text-gray-300" />
+                                                        paragraph-class="mt-1 text-xs text-gray-300 leading-5" />
                                                 </div>
                                                 <span class="mt-0.5 inline-flex items-center justify-center w-2 h-2 rounded-full bg-blue-400"></span>
                                             </div>
 
-                                            <div class="flex flex-wrap items-center justify-start gap-2 pt-2 border-t border-gray-600/60 md:justify-between">
+                                            <div class="flex flex-wrap items-center justify-start gap-2 pt-3 border-t border-gray-600/60 md:justify-between">
                                                 <button
                                                     type="button"
                                                     class="text-[11px] text-blue-200 underline decoration-dotted hover:text-blue-100"

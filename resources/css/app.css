@@ -88,10 +88,10 @@ button,
 
   .planner-week {
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
     overflow-x: auto;
-    padding: 0.5rem 0 0.75rem;
-    scroll-snap-type: x mandatory;
+    padding: 0.5rem 0 1rem;
+    scroll-snap-type: x proximity;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -100,27 +100,37 @@ button,
   }
 
   .planner-day {
-    min-width: 16.5rem;
+    flex: 0 0 18rem;
+    min-height: 100%;
     scroll-snap-align: start;
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 1024px) {
     .planner-week {
-      display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
-      overflow-x: visible;
-      padding-bottom: 0;
+      gap: 1.75rem;
       scroll-snap-type: none;
-    }
-
-    .planner-day {
-      min-width: 0;
     }
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 1280px) {
     .planner-week {
-      grid-auto-columns: minmax(240px, 1fr);
+      overflow-x: visible;
+      padding-right: 0;
+    }
+
+    .planner-day {
+      flex: 1 0 0;
+      min-width: 18rem;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .planner-week {
+      gap: 2rem;
+    }
+
+    .planner-day {
+      max-width: 20rem;
     }
   }
 }
