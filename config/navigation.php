@@ -9,6 +9,11 @@ return [
             'accent' => true,
         ],
         [
+            'label' => 'Backlog',
+            'route' => 'backlog',
+            'icon' => '🗂️',
+        ],
+        [
             'label' => 'Hoy',
             'route' => 'today',
             'icon' => '☀️',
