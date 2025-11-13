@@ -10,14 +10,9 @@
         <div class="max-w-7xl mx-auto px-4">
 
             <div class="grid grid-cols-12 gap-6">
-                {{-- LEFT COLUMN: Sidebar + Backlog aligned --}}
+                {{-- LEFT COLUMN: Backlog aligned with planner --}}
                 <aside class="col-span-12 md:col-span-3 space-y-6">
-                    {{-- Sidebar --}}
-                    <div class="hidden md:block">
-                        <x-sidebar />
-                    </div>
-
-                    {{-- Backlog (under menu) --}}
+                    {{-- Backlog --}}
                     <div class="lg:sticky lg:top-28">
                         <div class="bg-gray-800/90 border border-gray-700 rounded-lg p-4">
                             <header class="flex items-center justify-between mb-3">
