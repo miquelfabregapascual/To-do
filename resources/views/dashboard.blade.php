@@ -7,11 +7,11 @@
     </x-slot>
 
     <div class="py-8 bg-gray-900 min-h-screen text-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="max-w-[1800px] mx-auto px-4 sm:px-6 xl:px-8 2xl:px-12">
 
             <div class="flex flex-col lg:flex-row lg:items-stretch gap-6">
                 {{-- LEFT COLUMN: Backlog aligned with planner --}}
-                <aside class="space-y-6 lg:space-y-0 lg:flex lg:flex-col lg:gap-6 lg:w-64 xl:w-72 lg:flex-shrink-0 lg:self-stretch">
+                <aside class="space-y-6 lg:space-y-0 lg:flex lg:flex-col lg:gap-6 lg:w-60 xl:w-64 2xl:w-72 lg:flex-shrink-0 lg:self-stretch lg:h-full">
                     {{-- Backlog --}}
                     <div class="h-full lg:flex-1">
                         <div class="bg-gray-800/90 border border-gray-700 rounded-lg p-4 h-full flex flex-col">
