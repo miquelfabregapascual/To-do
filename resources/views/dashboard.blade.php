@@ -209,10 +209,23 @@
                                                     Detalle
                                                 </button>
 
+                                                @if (! $task->is_anchor)
                                                 <form method="POST" action="{{ route('tasks.toggle', $task) }}">
                                                     @csrf @method('PATCH')
                                                     <button type="submit" class="text-[11px] underline hover:no-underline hover:text-blue-300">Completar</button>
                                                 </form>
+                                                @endif
+
+                                                @if (! $task->is_anchor)
+                                                <form method="POST" action="{{ route('planner.schedule') }}">
+                                                    @csrf
+                                                    <input type="hidden" name="task_id" value="{{ $task->id }}">
+                                                    <input type="hidden" name="due_date" value="">
+                                                    <button type="submit" class="text-[11px] text-amber-200 underline hover:no-underline hover:text-amber-100">
+                                                        Volver a backlog
+                                                    </button>
+                                                </form>
+                                                @endif
 
                                                 @if (! $task->is_anchor)
                                                 <form method="POST" action="{{ route('planner.schedule') }}">
