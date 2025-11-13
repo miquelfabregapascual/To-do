@@ -107,8 +107,7 @@ button,
   @media (min-width: 640px) {
     .planner-week {
       display: grid;
-      grid-auto-flow: column;
-      grid-auto-columns: minmax(220px, 1fr);
+      grid-template-columns: repeat(7, minmax(0, 1fr));
       overflow-x: visible;
       padding-bottom: 0;
       scroll-snap-type: none;
