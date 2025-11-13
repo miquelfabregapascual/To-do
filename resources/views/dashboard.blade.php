@@ -7,11 +7,11 @@
     </x-slot>
 
     <div class="py-8 bg-gray-900 min-h-screen text-gray-100">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
 
-            <div class="flex flex-col xl:flex-row gap-6">
+            <div class="flex flex-col lg:flex-row gap-6">
                 {{-- LEFT COLUMN: Backlog aligned with planner --}}
-                <aside class="space-y-6 xl:w-64 2xl:w-72 xl:flex-shrink-0">
+                <aside class="space-y-6 lg:w-64 xl:w-72 lg:flex-shrink-0">
                     {{-- Backlog --}}
                     <div class="lg:sticky lg:top-28">
                         <div class="bg-gray-800/90 border border-gray-700 rounded-lg p-4">
@@ -156,8 +156,8 @@
                     </div>
 
                     {{-- === Week grid (full width of right column) === --}}
-                    <div class="overflow-x-auto xl:overflow-visible">
-                        <div class="planner-week no-scrollbar pr-4 xl:pr-0">
+                    <div class="overflow-x-auto lg:overflow-visible">
+                        <div class="planner-week no-scrollbar">
                             @foreach ($days as $day)
                             @php
                             $isToday = $day->isSameDay($today);
@@ -166,26 +166,26 @@
                             $count = $dayTasks->count();
                             @endphp
 
-                            <section class="planner-day bg-gray-800/90 border border-gray-700 rounded-xl p-3 space-y-2.5 transition-all"
+                            <section class="planner-day bg-gray-800/90 border border-gray-700 rounded-xl p-3 space-y-2 transition-all"
                                 data-drop-date="{{ $dayKey }}">
                                 <header class="flex items-center justify-between gap-3">
-                                    <div class="flex flex-col gap-1.5">
-                                        <span class="text-[10px] font-semibold tracking-[0.16em] text-gray-400 uppercase">{{ $day->translatedFormat('l') }}</span>
-                                        <div class="inline-flex items-center gap-1.5">
-                                            <span class="inline-flex items-center justify-center rounded-full px-2 py-0.5 text-[11px] font-semibold {{ $isToday ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-100' }}">
+                                    <div class="flex flex-col gap-1">
+                                        <span class="text-[11px] font-semibold tracking-[0.14em] text-gray-400 uppercase">{{ $day->translatedFormat('l') }}</span>
+                                        <div class="inline-flex items-center gap-2">
+                                            <span class="inline-flex items-center justify-center rounded-full px-2 py-0.5 text-xs font-semibold leading-tight {{ $isToday ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-100' }}">
                                                 {{ $day->translatedFormat('d M') }}
                                             </span>
                                             @if ($isToday)
-                                            <span class="text-[10px] font-medium text-blue-300">Hoy</span>
+                                            <span class="text-[11px] font-medium text-blue-300">Hoy</span>
                                             @endif
                                         </div>
                                     </div>
-                                    <span class="inline-flex items-center justify-center min-w-[26px] h-6 px-2 text-[10px] font-semibold rounded-full {{ $count ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300' }}">
+                                    <span class="inline-flex items-center justify-center min-w-[26px] h-6 px-2 text-[11px] font-semibold rounded-full {{ $count ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300' }}">
                                         {{ $count }}
                                     </span>
                                 </header>
 
-                                <ol class="space-y-2 min-h-[200px]">
+                                <ol class="space-y-2 min-h-[192px]">
                                     @forelse ($dayTasks as $task)
                                     <li class="group bg-gray-700/70 border border-gray-600 rounded-lg p-2.5 overflow-hidden cursor-default md:cursor-grab"
                                         draggable="true" data-task-draggable="{{ $task->id }}" aria-grabbed="false">

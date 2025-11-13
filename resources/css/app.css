@@ -88,12 +88,12 @@ button,
 
   .planner-week {
     display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(14rem, 1fr);
     gap: 0.75rem;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(16rem, 1fr);
     overflow-x: auto;
     padding: 0.5rem 0 1rem;
-    scroll-snap-type: x proximity;
+    scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -111,24 +111,22 @@ button,
     .planner-week {
       grid-auto-flow: initial;
       grid-auto-columns: initial;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 0.75rem;
       overflow-x: hidden;
-      padding-right: 0;
       scroll-snap-type: none;
     }
   }
 
   @media (min-width: 1280px) {
     .planner-week {
-      grid-template-columns: repeat(7, minmax(0, 1fr));
-      gap: 1.125rem;
+      gap: 1rem;
     }
   }
 
   @media (min-width: 1536px) {
     .planner-week {
-      gap: 1.25rem;
+      gap: 1.125rem;
     }
   }
 }
