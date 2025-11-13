@@ -148,23 +148,44 @@ Any contributor should use it to validate whether a feature is ready to merge.
 24. **Guided “Focus mode” for Today view**  
 **Done when:** Start focus session/Pomodoro; quick snooze/defer; minimal UI.
 
-25. **Minimal CI (syntax + migrations)**  
+25. **Global search & filters**  
+**Done when:**  
+- Search box allows filtering by task title, label, category, priority, or date.  
+- Results update without full page reload.  
+- Keyboard shortcut `/` focuses the search input.  
+- Works in Planner, Today, Inbox, Backlog, and Completed (where reasonable).
+
+26. **Bulk actions in Backlog and Completed**  
+**Done when:**  
+- User can multi-select tasks in Backlog and Completed views.  
+- Supports bulk delete, bulk mark completed, bulk move to Backlog/Inbox.  
+- Bulk actions show a confirmation step to avoid mistakes.  
+- Desktop & mobile usable (no tiny checkboxes only).
+
+27. **Duplicate task**  
+**Done when:**  
+- Any task has a “Duplicate” / “Clone” action.  
+- New task copies title, description, labels, priority, estimate, and due_date (optional).  
+- Duplicated task appears in the same context (day or backlog).  
+- No accidental linkage (editing the copy does not change the original).
+
+28. **Minimal CI (syntax + migrations)**  
 **Done when:**  
 - GitHub Actions runs on PRs (`composer install`, `php -l`, `php artisan migrate --env=testing`).  
 - Status badge added to README.  
 
-26. **Seed data for demo/dev**  
+29. **Seed data for demo/dev**  
 **Done when:**  
 - Factories and seeders create 1 demo user + ~8 tasks.  
 - Optional recurring anchors seeded when flag enabled.  
 - `php artisan db:seed` works out of the box.  
 
-27. **Custom 404/500 error pages**  
+30. **Custom 404/500 error pages**  
 **Done when:**  
 - `resources/views/errors/404.blade.php` and `500.blade.php` styled like the app.  
 - Dev can trigger 500 locally to preview.
 
-28. **Access logging for scheduling actions**  
+31. **Access logging for scheduling actions**  
 **Done when:**  
 - Logs when tasks are scheduled/unscheduled with user/task IDs + timestamps.  
 - Log channel configured (`single` or `daily`); no sensitive info stored.
@@ -173,28 +194,28 @@ Any contributor should use it to validate whether a feature is ready to merge.
 
 ## 🟩 P2 — Nice-to-have
 
-29. **Analytics history (streaks & trends)**  
+32. **Analytics history (streaks & trends)**  
 **Done when:** 4–8 week history: completion rate, streaks, carry-over trend.
 
-30. **Import / export (CSV / Todoist)**  
+33. **Import / export (CSV / Todoist)**  
 **Done when:** Import CSV to Inbox; export filtered lists/weeks.
 
-31. **Theming & accessibility settings**  
+34. **Theming & accessibility settings**  
 **Done when:** High-contrast mode; font scale; ARIA checks pass.
 
-32. **Week capacity indicator & time budgeting**  
+35. **Week capacity indicator & time budgeting**  
 **Done when:** Capacity bar per day/week; warns when overbooked.
 
-33. **Optional AI assist to suggest schedule balance**  
+36. **Optional AI assist to suggest schedule balance**  
 **Done when:** Suggests distributing backlog across the week; non-destructive preview.
 
-34. **Internationalization (i18n: ES / CA / EN)**  
+37. **Internationalization (i18n: ES / CA / EN)**  
 **Done when:**  
 - All strings moved to `lang/*`.  
 - Language switch stored per user/session.  
 - ES fully localized; CA/EN stubs exist.
 
-35. **Accessibility pass (a11y)**  
+38. **Accessibility pass (a11y)**  
 **Done when:**  
 - High-contrast toggle functional.  
 - Focus states visible; contrast ≥ 4.5:1.  

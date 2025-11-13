@@ -13,7 +13,7 @@
                 {{-- LEFT COLUMN: Backlog aligned with planner --}}
                 <aside class="space-y-6 lg:space-y-0 lg:flex lg:flex-col lg:gap-6 lg:self-stretch">
                     {{-- Backlog --}}
-                    <div class="h-full lg:flex-1">
+                    <div>
                         <div class="bg-gray-800/90 border border-gray-700 rounded-lg p-4 h-full flex flex-col">
                             <header class="flex items-center justify-between mb-3">
                                 <div>
@@ -50,8 +50,7 @@
                                             <button
                                                 type="button"
                                                 class="text-[11px] text-blue-200 underline decoration-dotted hover:text-blue-100"
-                                                data-task-detail-trigger="{{ $task->id }}"
-                                            >
+                                                data-task-detail-trigger="{{ $task->id }}">
                                                 Detalle
                                             </button>
 
@@ -156,8 +155,8 @@
                     </div>
 
                     {{-- === Week grid (full width of right column) === --}}
-                    <div class="overflow-x-auto xl:overflow-visible">
-                        <div class="planner-week no-scrollbar min-h-full">
+                    <div class="overflow-x-auto">
+                        <div class="planner-week min-h-full">
                             @foreach ($days as $day)
                             @php
                             $isToday = $day->isSameDay($today);
@@ -208,8 +207,7 @@
                                                 <button
                                                     type="button"
                                                     class="text-[11px] text-blue-200 underline decoration-dotted hover:text-blue-100"
-                                                    data-task-detail-trigger="{{ $task->id }}"
-                                                >
+                                                    data-task-detail-trigger="{{ $task->id }}">
                                                     Detalle
                                                 </button>
 
