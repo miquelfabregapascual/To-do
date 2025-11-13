@@ -7,11 +7,11 @@
     </x-slot>
 
     <div class="py-8 bg-gray-900 min-h-screen text-gray-100">
-        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6">
+        <div class="max-w-[1500px] mx-auto px-4 sm:px-6">
 
-            <div class="flex flex-col lg:flex-row lg:items-stretch gap-6">
+            <div class="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(260px,300px)_1fr] lg:items-stretch">
                 {{-- LEFT COLUMN: Backlog aligned with planner --}}
-                <aside class="space-y-6 lg:space-y-0 lg:flex lg:flex-col lg:gap-6 lg:w-64 xl:w-72 lg:flex-shrink-0 lg:self-stretch">
+                <aside class="space-y-6 lg:space-y-0 lg:flex lg:flex-col lg:gap-6 lg:self-stretch">
                     {{-- Backlog --}}
                     <div class="h-full lg:flex-1">
                         <div class="bg-gray-800/90 border border-gray-700 rounded-lg p-4 h-full flex flex-col">
@@ -83,7 +83,7 @@
 
                 {{-- RIGHT COLUMN: Planner only (more space) --}}
                 <main
-                    class="flex-1 min-w-0 space-y-6"
+                    class="flex-1 min-w-0 space-y-6 lg:flex lg:flex-col lg:min-h-full"
                     data-planner-board
                     data-schedule-url="{{ route('planner.schedule') }}">
                     {{-- Flash message --}}
@@ -157,7 +157,7 @@
 
                     {{-- === Week grid (full width of right column) === --}}
                     <div class="overflow-x-auto xl:overflow-visible">
-                        <div class="planner-week no-scrollbar">
+                        <div class="planner-week no-scrollbar min-h-full">
                             @foreach ($days as $day)
                             @php
                             $isToday = $day->isSameDay($today);
