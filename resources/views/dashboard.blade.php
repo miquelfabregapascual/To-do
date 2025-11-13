@@ -166,28 +166,28 @@
                             $count = $dayTasks->count();
                             @endphp
 
-                            <section class="planner-day bg-gray-800/90 border border-gray-700 rounded-xl p-5 space-y-4 transition-all"
+                            <section class="planner-day bg-gray-800/90 border border-gray-700 rounded-xl p-4 space-y-3 transition-all"
                                 data-drop-date="{{ $dayKey }}">
-                                <header class="flex items-center justify-between gap-4">
-                                    <div class="flex flex-col gap-2">
-                                        <span class="text-xs font-semibold tracking-[0.18em] text-gray-400 uppercase">{{ $day->translatedFormat('l') }}</span>
+                                <header class="flex items-center justify-between gap-3">
+                                    <div class="flex flex-col gap-1.5">
+                                        <span class="text-[11px] font-semibold tracking-[0.16em] text-gray-400 uppercase">{{ $day->translatedFormat('l') }}</span>
                                         <div class="inline-flex items-center gap-2">
-                                            <span class="inline-flex items-center justify-center rounded-full px-3 py-1 text-sm font-semibold {{ $isToday ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-100' }}">
+                                            <span class="inline-flex items-center justify-center rounded-full px-2.5 py-1 text-xs font-semibold {{ $isToday ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-100' }}">
                                                 {{ $day->translatedFormat('d M') }}
                                             </span>
                                             @if ($isToday)
-                                            <span class="text-xs font-medium text-blue-300">Hoy</span>
+                                            <span class="text-[11px] font-medium text-blue-300">Hoy</span>
                                             @endif
                                         </div>
                                     </div>
-                                    <span class="inline-flex items-center justify-center min-w-[32px] h-7 px-2 text-xs font-semibold rounded-full {{ $count ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300' }}">
+                                    <span class="inline-flex items-center justify-center min-w-[28px] h-6 px-2 text-[11px] font-semibold rounded-full {{ $count ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300' }}">
                                         {{ $count }}
                                     </span>
                                 </header>
 
-                                <ol class="space-y-3 min-h-[200px]">
+                                <ol class="space-y-2.5 min-h-[180px]">
                                     @forelse ($dayTasks as $task)
-                                    <li class="group bg-gray-700/70 border border-gray-600 rounded-lg p-4 overflow-hidden cursor-default md:cursor-grab"
+                                    <li class="group bg-gray-700/70 border border-gray-600 rounded-lg p-3 overflow-hidden cursor-default md:cursor-grab"
                                         draggable="true" data-task-draggable="{{ $task->id }}" aria-grabbed="false">
                                         <div class="flex flex-col gap-2 min-w-0">
                                             <div class="flex items-start justify-between gap-3">
