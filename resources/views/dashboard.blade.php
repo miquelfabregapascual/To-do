@@ -35,7 +35,7 @@
                             <div class="space-y-3" data-drop-backlog="true" data-backlog-list>
                                 @forelse ($backlog as $task)
                                 <article
-                                    class="bg-gray-700/70 border border-gray-600 rounded-md p-3 cursor-grab focus-within:ring-2 focus-within:ring-blue-500"
+                                    class="bg-gray-700/70 border border-gray-600 rounded-md p-3 cursor-default md:cursor-grab focus-within:ring-2 focus-within:ring-blue-500"
                                     draggable="true"
                                     data-task-draggable="{{ $task->id }}"
                                     aria-grabbed="false">
@@ -52,6 +52,14 @@
                                         </div>
 
                                         <div class="flex items-center justify-between gap-2 pt-2 border-t border-gray-600/60">
+                                            <button
+                                                type="button"
+                                                class="text-[11px] text-blue-200 underline decoration-dotted hover:text-blue-100"
+                                                data-task-detail-trigger="{{ $task->id }}"
+                                            >
+                                                Detalle
+                                            </button>
+
                                             <form method="POST" action="{{ route('tasks.toggle', $task) }}">
                                                 @csrf @method('PATCH')
                                                 <button type="submit" class="text-[11px] underline hover:no-underline hover:text-blue-300">
@@ -153,8 +161,8 @@
                     </div>
 
                     {{-- === Week grid (full width of right column) === --}}
-                    <div class="overflow-x-auto pb-2">
-                        <div class="grid grid-flow-col auto-cols-[minmax(220px,1fr)] md:auto-cols-[minmax(240px,1fr)] xl:auto-cols-[minmax(220px,1fr)] gap-4 min-w-full">
+                    <div class="-mx-4 sm:mx-0">
+                        <div class="planner-week no-scrollbar px-2 sm:px-0">
                             @foreach ($days as $day)
                             @php
                             $isToday = $day->isSameDay($today);
@@ -163,7 +171,7 @@
                             $count = $dayTasks->count();
                             @endphp
 
-                            <section class="bg-gray-800/90 border border-gray-700 rounded-lg p-4 space-y-3 transition-all"
+                            <section class="planner-day bg-gray-800/90 border border-gray-700 rounded-lg p-4 space-y-3 transition-all"
                                 data-drop-date="{{ $dayKey }}">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-2">
@@ -180,7 +188,7 @@
 
                                 <ol class="space-y-3 min-h-[160px]">
                                     @forelse ($dayTasks as $task)
-                                    <li class="group bg-gray-700/70 border border-gray-600 rounded-md p-3 overflow-hidden cursor-grab"
+                                    <li class="group bg-gray-700/70 border border-gray-600 rounded-md p-3 overflow-hidden cursor-default md:cursor-grab"
                                         draggable="true" data-task-draggable="{{ $task->id }}" aria-grabbed="false">
                                         <div class="flex flex-col gap-2 min-w-0">
                                             <div class="flex items-start justify-between gap-3">
@@ -197,11 +205,30 @@
                                                 <span class="mt-0.5 inline-flex items-center justify-center w-2 h-2 rounded-full bg-blue-400"></span>
                                             </div>
 
-                                            <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-gray-600/60">
+                                            <div class="flex flex-wrap items-center justify-start gap-2 pt-2 border-t border-gray-600/60 md:justify-between">
+                                                <button
+                                                    type="button"
+                                                    class="text-[11px] text-blue-200 underline decoration-dotted hover:text-blue-100"
+                                                    data-task-detail-trigger="{{ $task->id }}"
+                                                >
+                                                    Detalle
+                                                </button>
+
                                                 <form method="POST" action="{{ route('tasks.toggle', $task) }}">
                                                     @csrf @method('PATCH')
                                                     <button type="submit" class="text-[11px] underline hover:no-underline hover:text-blue-300">Completar</button>
                                                 </form>
+
+                                                @if (! $task->is_anchor)
+                                                <form method="POST" action="{{ route('planner.schedule') }}">
+                                                    @csrf
+                                                    <input type="hidden" name="task_id" value="{{ $task->id }}">
+                                                    <input type="hidden" name="due_date" value="">
+                                                    <button type="submit" class="text-[11px] text-amber-200 underline hover:no-underline hover:text-amber-100">
+                                                        Volver a backlog
+                                                    </button>
+                                                </form>
+                                                @endif
 
                                                 <form method="POST" action="{{ route('tasks.destroy', $task) }}" onsubmit="return confirm('¿Eliminar tarea?')">
                                                     @csrf @method('DELETE')
