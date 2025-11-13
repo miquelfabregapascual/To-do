@@ -9,12 +9,12 @@
     <div class="py-8 bg-gray-900 min-h-screen text-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
 
-            <div class="flex flex-col lg:flex-row gap-6">
+            <div class="flex flex-col lg:flex-row lg:items-stretch gap-6">
                 {{-- LEFT COLUMN: Backlog aligned with planner --}}
-                <aside class="space-y-6 lg:w-64 xl:w-72 lg:flex-shrink-0">
+                <aside class="space-y-6 lg:space-y-0 lg:flex lg:flex-col lg:gap-6 lg:w-64 xl:w-72 lg:flex-shrink-0 lg:self-stretch">
                     {{-- Backlog --}}
-                    <div class="lg:sticky lg:top-28">
-                        <div class="bg-gray-800/90 border border-gray-700 rounded-lg p-4">
+                    <div class="h-full lg:flex-1">
+                        <div class="bg-gray-800/90 border border-gray-700 rounded-lg p-4 h-full flex flex-col">
                             <header class="flex items-center justify-between mb-3">
                                 <div>
                                     <h3 class="text-base font-semibold text-gray-100">Backlog</h3>
@@ -27,7 +27,7 @@
                                 </span>
                             </header>
 
-                            <div class="space-y-4" data-drop-backlog="true" data-backlog-list>
+                            <div class="space-y-4 flex-1 lg:overflow-y-auto lg:pr-1 lg:no-scrollbar" data-drop-backlog="true" data-backlog-list>
                                 @forelse ($backlog as $task)
                                 <article
                                     class="bg-gray-700/70 border border-gray-600 rounded-lg p-4 cursor-default md:cursor-grab focus-within:ring-2 focus-within:ring-blue-500"
@@ -156,7 +156,7 @@
                     </div>
 
                     {{-- === Week grid (full width of right column) === --}}
-                    <div class="overflow-x-auto lg:overflow-visible">
+                    <div class="overflow-x-auto xl:overflow-visible">
                         <div class="planner-week no-scrollbar">
                             @foreach ($days as $day)
                             @php
