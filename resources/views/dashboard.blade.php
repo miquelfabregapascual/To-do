@@ -227,17 +227,6 @@
                                                 </form>
                                                 @endif
 
-                                                @if (! $task->is_anchor)
-                                                <form method="POST" action="{{ route('planner.schedule') }}">
-                                                    @csrf
-                                                    <input type="hidden" name="task_id" value="{{ $task->id }}">
-                                                    <input type="hidden" name="due_date" value="">
-                                                    <button type="submit" class="text-[11px] text-amber-200 underline hover:no-underline hover:text-amber-100">
-                                                        Volver a backlog
-                                                    </button>
-                                                </form>
-                                                @endif
-
                                                 <form method="POST" action="{{ route('tasks.destroy', $task) }}" onsubmit="return confirm('¿Eliminar tarea?')">
                                                     @csrf @method('DELETE')
                                                     <button type="submit" class="text-[11px] text-red-300 underline hover:no-underline hover:text-red-200">Eliminar</button>

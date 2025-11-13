@@ -73,7 +73,7 @@ class TaskController extends Controller
         $backlog = Task::where('user_id', $user->id)
             ->whereNull('due_date')
             ->where('completed', false)
-            ->where('stage', Task::STAGE_INBOX)
+            ->where('stage', Task::STAGE_BACKLOG)
             ->when($anchorsSchemaReady, fn ($query) => $query->where('is_anchor', false))
             ->latest('created_at')
             ->get();
