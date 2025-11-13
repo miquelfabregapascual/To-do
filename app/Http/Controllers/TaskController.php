@@ -181,6 +181,8 @@ class TaskController extends Controller
             : null;
         if ($task->due_date) {
             $task->stage = Task::STAGE_INBOX;
+        } else {
+            $task->stage = Task::STAGE_BACKLOG;
         }
         $task->save();
 
