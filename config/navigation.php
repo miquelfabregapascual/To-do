@@ -3,9 +3,10 @@
 return [
     'primary' => [
         [
-            'label' => 'Inbox',
-            'route' => 'inbox',
-            'icon' => '📥',
+            'label' => 'Planner',
+            'route' => 'dashboard',
+            'icon' => '🗓️',
+            'accent' => true,
         ],
         [
             'label' => 'Backlog',
@@ -16,32 +17,21 @@ return [
             'label' => 'Hoy',
             'route' => 'today',
             'icon' => '☀️',
-            'accent' => true,
         ],
         [
-            'label' => 'Próx. 7 días',
-            'route' => 'dashboard',
-            'icon' => '📅',
+            'label' => 'Inbox',
+            'route' => 'inbox',
+            'icon' => '📥',
+        ],
+        [
+            'label' => 'Backlog',
+            'route' => 'backlog',
+            'icon' => '🗂️',
         ],
         [
             'label' => 'Completadas',
             'route' => 'completed',
             'icon' => '✅',
-        ],
-        [
-            'label' => 'Resumen',
-            'route' => 'all',
-            'icon' => '📚',
-        ],
-        [
-            'label' => 'Revisión semanal',
-            'route' => 'weekly-review',
-            'icon' => '📊',
-        ],
-        [
-            'label' => 'Planificar próxima semana',
-            'route' => 'plan-next-week',
-            'icon' => '🧭',
         ],
         [
             'label' => 'Ajustes',
