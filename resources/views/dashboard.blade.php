@@ -52,6 +52,14 @@
                                         </div>
 
                                         <div class="flex items-center justify-between gap-2 pt-2 border-t border-gray-600/60">
+                                            <button
+                                                type="button"
+                                                class="text-[11px] text-blue-200 underline decoration-dotted hover:text-blue-100"
+                                                data-task-detail-trigger="{{ $task->id }}"
+                                            >
+                                                Detalle
+                                            </button>
+
                                             <form method="POST" action="{{ route('tasks.toggle', $task) }}">
                                                 @csrf @method('PATCH')
                                                 <button type="submit" class="text-[11px] underline hover:no-underline hover:text-blue-300">
@@ -198,6 +206,14 @@
                                             </div>
 
                                             <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-gray-600/60">
+                                                <button
+                                                    type="button"
+                                                    class="text-[11px] text-blue-200 underline decoration-dotted hover:text-blue-100"
+                                                    data-task-detail-trigger="{{ $task->id }}"
+                                                >
+                                                    Detalle
+                                                </button>
+
                                                 <form method="POST" action="{{ route('tasks.toggle', $task) }}">
                                                     @csrf @method('PATCH')
                                                     <button type="submit" class="text-[11px] underline hover:no-underline hover:text-blue-300">Completar</button>

@@ -36,6 +36,8 @@ class Task extends Model
         'recurring_anchor_id',
         'anchor_start_time',
         'anchor_end_time',
+        'estimate_minutes',
+        'subtasks',
     ];
 
     /**
@@ -62,6 +64,8 @@ class Task extends Model
         'labels' => 'array',
         'anchor_start_time' => 'datetime:H:i:s',
         'anchor_end_time' => 'datetime:H:i:s',
+        'estimate_minutes' => 'integer',
+        'subtasks' => 'array',
     ];
 
     /**

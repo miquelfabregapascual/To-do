@@ -38,10 +38,20 @@
                         <p class="text-sm text-gray-200" x-show="task.description" x-text="task.description"></p>
                     </div>
 
-                    <div class="flex flex-wrap gap-2 justify-end">
-                        <template x-for="label in task.labels" :key="label">
-                            <span class="text-[11px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-100" x-text="label"></span>
-                        </template>
+                    <div class="flex flex-col items-end gap-2">
+                        <button
+                            type="button"
+                            class="text-[11px] text-blue-200 underline decoration-dotted hover:text-blue-100"
+                            x-bind:data-task-detail-trigger="task.id"
+                        >
+                            Detalle
+                        </button>
+
+                        <div class="flex flex-wrap gap-2 justify-end">
+                            <template x-for="label in task.labels" :key="label">
+                                <span class="text-[11px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-100" x-text="label"></span>
+                            </template>
+                        </div>
                     </div>
                 </header>
 

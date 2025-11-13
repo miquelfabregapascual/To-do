@@ -28,6 +28,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/tasks',                [TaskController::class, 'store'])->name('tasks.store');
     Route::patch('/tasks/{task}/toggle', [TaskController::class, 'toggle'])->name('tasks.toggle');
     Route::patch('/tasks/{task}/triage', [TaskController::class, 'triageUpdate'])->name('tasks.triage');
+    Route::get('/tasks/{task}/detail',   [TaskController::class, 'detail'])->name('tasks.detail');
+    Route::patch('/tasks/{task}/detail', [TaskController::class, 'updateDetail'])->name('tasks.detail.update');
     Route::delete('/tasks/{task}',       [TaskController::class, 'destroy'])->name('tasks.destroy');
     Route::post('/planner/schedule',     [TaskController::class, 'schedule'])->name('planner.schedule');
 });
