@@ -53,8 +53,16 @@
             />
         </div>
 
-        @if ($actions)
-            <div class="flex flex-col items-end gap-2 shrink-0">
+        <div class="flex flex-col items-end gap-2 shrink-0">
+            <button
+                type="button"
+                class="text-[11px] text-blue-200 underline decoration-dotted hover:text-blue-100"
+                data-task-detail-trigger="{{ $task->id }}"
+            >
+                Detalle
+            </button>
+
+            @if ($actions)
                 <form method="POST" action="{{ route('tasks.toggle', $task) }}">
                     @csrf
                     @method('PATCH')
@@ -70,7 +78,7 @@
                         Eliminar
                     </button>
                 </form>
-            </div>
-        @endif
+            @endif
+        </div>
     </div>
 </article>
