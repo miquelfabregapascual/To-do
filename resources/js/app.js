@@ -1,63 +1,61 @@
 import './bootstrap';
+import Alpine from 'alpinejs';
 import '../css/app.css';
 
-const autoResizeDescription = (event) => {
+window.Alpine = Alpine;
+Alpine.start();
+
+document.addEventListener('input', (event) => {
     if (!event.target.matches('#description')) {
         return;
     }
 
-    event.target.style.height = 'auto';
-    event.target.style.height = `${event.target.scrollHeight}px`;
-};
-
-document.addEventListener('input', autoResizeDescription);
+    const element = event.target;
+    element.style.height = 'auto';
+    element.style.height = `${element.scrollHeight}px`;
+});
 
 document.addEventListener('click', (event) => {
     const toggle = event.target.closest('[data-read-more-toggle]');
-    if (!toggle) {
+    if (toggle) {
+        const targetId = toggle.getAttribute('data-target');
+        if (!targetId) {
+            return;
+        }
+
+        const wrapper = document.getElementById(targetId);
+        const text = wrapper?.querySelector('[data-description-text]');
+        if (!wrapper || !text) {
+            return;
+        }
+
+        const expanded = wrapper.getAttribute('data-expanded') === 'true';
+        const nextExpanded = !expanded;
+
+        wrapper.setAttribute('data-expanded', String(nextExpanded));
+        toggle.setAttribute('aria-expanded', String(nextExpanded));
+
+        const labelTarget = toggle.querySelector('[data-toggle-label]') || toggle;
+        const moreLabel = toggle.getAttribute('data-label-more') || 'Leer más';
+        const lessLabel = toggle.getAttribute('data-label-less') || 'Leer menos';
+
+        labelTarget.textContent = nextExpanded ? lessLabel : moreLabel;
         return;
     }
 
-    const targetId = toggle.getAttribute('data-target');
-    if (!targetId) {
+    const trigger = event.target.closest('[data-task-detail-trigger]');
+    if (!trigger) {
         return;
     }
 
-    const wrapper = document.getElementById(targetId);
-    const text = wrapper?.querySelector('[data-description-text]');
-    if (!wrapper || !text) {
+    const taskId = trigger.getAttribute('data-task-detail-trigger');
+    if (!taskId || typeof window.openTaskDetailDrawer !== 'function') {
         return;
     }
 
-    const expanded = wrapper.getAttribute('data-expanded') === 'true';
-    const nextExpanded = !expanded;
-
-    wrapper.setAttribute('data-expanded', String(nextExpanded));
-    toggle.setAttribute('aria-expanded', String(nextExpanded));
-
-    const labelTarget = toggle.querySelector('[data-toggle-label]') || toggle;
-    const moreLabel = toggle.getAttribute('data-label-more') || 'Leer más';
-    const lessLabel = toggle.getAttribute('data-label-less') || 'Leer menos';
-
-    labelTarget.textContent = nextExpanded ? lessLabel : moreLabel;
+    event.preventDefault();
+    window.openTaskDetailDrawer(taskId);
 });
-
-function setupTaskDetailTriggers() {
-    document.addEventListener('click', (event) => {
-        const trigger = event.target.closest('[data-task-detail-trigger]');
-        if (!trigger) {
-            return;
-        }
-
-        const taskId = trigger.getAttribute('data-task-detail-trigger');
-        if (!taskId || typeof window.openTaskDetailDrawer !== 'function') {
-            return;
-        }
-
-        event.preventDefault();
-        window.openTaskDetailDrawer(taskId);
-    });
-}
 
 function setupTaskDetailDrawer() {
     const root = document.querySelector('[data-task-detail-root]');
@@ -405,5 +403,4 @@ function setupTaskDetailDrawer() {
 
 window.addEventListener('DOMContentLoaded', () => {
     setupTaskDetailDrawer();
-    setupTaskDetailTriggers();
 });

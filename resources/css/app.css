@@ -87,8 +87,10 @@ button,
   }
 
   .planner-week {
-    display: flex;
-    gap: 1.5rem;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(16rem, 1fr);
+    gap: 1rem;
     overflow-x: auto;
     padding: 0.5rem 0 1rem;
     scroll-snap-type: x proximity;
@@ -100,37 +102,35 @@ button,
   }
 
   .planner-day {
-    flex: 0 0 18rem;
     min-height: 100%;
     scroll-snap-align: start;
   }
 
   @media (min-width: 1024px) {
     .planner-week {
-      gap: 1.75rem;
+      grid-auto-flow: initial;
+      grid-auto-columns: initial;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 1.25rem;
+      overflow-x: hidden;
+      padding-right: 0;
       scroll-snap-type: none;
+    }
+
+    .planner-day {
+      min-width: 0;
     }
   }
 
   @media (min-width: 1280px) {
     .planner-week {
-      overflow-x: visible;
-      padding-right: 0;
-    }
-
-    .planner-day {
-      flex: 1 0 0;
-      min-width: 18rem;
+      gap: 1.5rem;
     }
   }
 
   @media (min-width: 1536px) {
     .planner-week {
-      gap: 2rem;
-    }
-
-    .planner-day {
-      max-width: 20rem;
+      gap: 1.75rem;
     }
   }
 }
