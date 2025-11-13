@@ -263,6 +263,90 @@ class TaskController extends Controller
         ]);
     }
 
+    public function detail(Task $task)
+    {
+        abort_unless($task->user_id === Auth::id(), 403);
+
+        return response()->json([
+            'task' => $this->presentTask($task),
+        ]);
+    }
+
+    public function updateDetail(Request $request, Task $task)
+    {
+        abort_unless($task->user_id === Auth::id(), 403);
+        abort_if($task->is_anchor, 422, 'Anchors cannot be edited.');
+
+        $validated = $request->validate([
+            'title' => ['sometimes', 'string', 'max:255'],
+            'description' => ['sometimes', 'nullable', 'string'],
+            'priority' => ['sometimes', 'nullable', 'integer', 'between:1,4'],
+            'labels' => ['sometimes', 'nullable', 'array'],
+            'labels.*' => ['string', 'max:40'],
+            'estimate_minutes' => ['sometimes', 'nullable', 'integer', 'between:5,1440'],
+            'due_date' => ['sometimes', 'nullable', 'date'],
+            'subtasks' => ['sometimes', 'array'],
+            'subtasks.*.title' => ['nullable', 'string', 'max:255'],
+            'subtasks.*.completed' => ['boolean'],
+        ]);
+
+        if (array_key_exists('title', $validated)) {
+            $task->title = $validated['title'];
+        }
+
+        if (array_key_exists('description', $validated)) {
+            $task->description = $validated['description'];
+        }
+
+        if (array_key_exists('priority', $validated)) {
+            $task->priority = $validated['priority'];
+        }
+
+        if (array_key_exists('labels', $validated)) {
+            $task->labels = collect($validated['labels'] ?? [])
+                ->map(fn ($label) => trim((string) $label))
+                ->filter(fn ($label) => $label !== '')
+                ->values()
+                ->all();
+        }
+
+        if (array_key_exists('estimate_minutes', $validated)) {
+            $task->estimate_minutes = $validated['estimate_minutes'];
+        }
+
+        if (array_key_exists('due_date', $validated)) {
+            $task->due_date = $validated['due_date']
+                ? Carbon::parse($validated['due_date'])->toDateString()
+                : null;
+
+            if ($task->due_date) {
+                $task->stage = Task::STAGE_INBOX;
+            }
+        }
+
+        if (array_key_exists('subtasks', $validated)) {
+            $task->subtasks = collect($validated['subtasks'] ?? [])
+                ->map(function ($subtask) {
+                    $title = trim((string) ($subtask['title'] ?? ''));
+
+                    return [
+                        'title' => $title,
+                        'completed' => (bool) ($subtask['completed'] ?? false),
+                    ];
+                })
+                ->filter(fn ($subtask) => $subtask['title'] !== '')
+                ->values()
+                ->all();
+        }
+
+        $task->save();
+
+        return response()->json([
+            'status' => 'ok',
+            'task' => $this->presentTask($task->fresh()),
+        ]);
+    }
+
     public function inbox()
     {
         $user = auth()->user();
@@ -483,5 +567,31 @@ class TaskController extends Controller
             'unscheduled' => $unscheduled,
             'recentlyCompleted' => $recentlyCompleted,
         ]);
+    }
+
+    /**
+     * Present a task payload suitable for the drawer APIs.
+     */
+    private function presentTask(Task $task): array
+    {
+        return [
+            'id' => $task->id,
+            'title' => $task->title,
+            'description' => $task->description,
+            'due_date' => optional($task->due_date)?->toDateString(),
+            'priority' => $task->priority,
+            'labels' => $task->labels ?? [],
+            'estimate_minutes' => $task->estimate_minutes,
+            'subtasks' => collect($task->subtasks ?? [])
+                ->map(fn ($subtask) => [
+                    'title' => (string) ($subtask['title'] ?? ''),
+                    'completed' => (bool) ($subtask['completed'] ?? false),
+                ])
+                ->values()
+                ->all(),
+            'stage' => $task->stage,
+            'completed' => $task->completed,
+            'labels_text' => collect($task->labels ?? [])->join(', '),
+        ];
     }
 }

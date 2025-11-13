@@ -28,6 +28,13 @@ class TaskFactory extends Factory
             'recurring_anchor_id' => null,
             'anchor_start_time' => null,
             'anchor_end_time' => null,
+            'estimate_minutes' => $this->faker->optional()->randomElement([15, 25, 30, 45, 60, 90, 120]),
+            'subtasks' => $this->faker->boolean(35)
+                ? collect(range(1, $this->faker->numberBetween(1, 3)))->map(fn ($index) => [
+                    'title' => 'Subtarea ' . $index,
+                    'completed' => false,
+                ])->toArray()
+                : [],
         ];
     }
 

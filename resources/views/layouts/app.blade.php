@@ -38,6 +38,11 @@
 
         @stack('modals')
 
+        <x-task-detail-drawer :routes="[
+            'show' => route('tasks.detail', ['task' => '__TASK__']),
+            'update' => route('tasks.detail.update', ['task' => '__TASK__']),
+        ]" />
+
         @livewireScripts
     </body>
 </html>
