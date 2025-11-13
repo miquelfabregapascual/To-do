@@ -76,4 +76,57 @@ button,
       scroll-snap-align: start;
     }
   }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .planner-week {
+    display: grid;
+    gap: 0.75rem;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(16rem, 1fr);
+    overflow-x: auto;
+    padding: 0.5rem 0 1rem;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .planner-week::-webkit-scrollbar {
+    display: none;
+  }
+
+  .planner-day {
+    min-height: 100%;
+    min-width: 0;
+    scroll-snap-align: start;
+  }
+
+  @media (min-width: 1024px) {
+    .planner-week {
+      grid-auto-flow: initial;
+      grid-auto-columns: initial;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 0.75rem;
+      overflow-x: hidden;
+      scroll-snap-type: none;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .planner-week {
+      gap: 1rem;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .planner-week {
+      gap: 1.125rem;
+    }
+  }
 }
