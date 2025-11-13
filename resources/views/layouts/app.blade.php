@@ -31,12 +31,19 @@
             @endif
 
             <!-- Page Content --> 
-            <main>
+            <main class="pb-24 sm:pb-0">
                 {{ $slot }}
             </main>
         </div>
 
         @stack('modals')
+
+        <x-task-detail-drawer :routes="[
+            'show' => route('tasks.detail', ['task' => '__TASK__']),
+            'update' => route('tasks.detail.update', ['task' => '__TASK__']),
+        ]" />
+
+        <x-mobile-nav />
 
         @livewireScripts
     </body>

@@ -8,6 +8,11 @@ return [
             'icon' => '📥',
         ],
         [
+            'label' => 'Backlog',
+            'route' => 'backlog',
+            'icon' => '🗂️',
+        ],
+        [
             'label' => 'Hoy',
             'route' => 'today',
             'icon' => '☀️',
@@ -27,6 +32,16 @@ return [
             'label' => 'Resumen',
             'route' => 'all',
             'icon' => '📚',
+        ],
+        [
+            'label' => 'Revisión semanal',
+            'route' => 'weekly-review',
+            'icon' => '📊',
+        ],
+        [
+            'label' => 'Planificar próxima semana',
+            'route' => 'plan-next-week',
+            'icon' => '🧭',
         ],
         [
             'label' => 'Ajustes',
