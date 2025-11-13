@@ -7,13 +7,13 @@
     </x-slot>
 
     <div class="py-8 bg-gray-900 min-h-screen text-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-6">
 
-            <div class="flex flex-col lg:flex-row lg:items-stretch gap-6">
+            <div class="flex flex-col xl:flex-row xl:items-stretch gap-6 xl:gap-8">
                 {{-- LEFT COLUMN: Backlog aligned with planner --}}
-                <aside class="space-y-6 lg:space-y-0 lg:flex lg:flex-col lg:gap-6 lg:w-64 xl:w-72 lg:flex-shrink-0 lg:self-stretch">
+                <aside class="space-y-6 xl:space-y-0 xl:flex xl:flex-col xl:gap-6 xl:flex-shrink-0 xl:self-stretch xl:w-60 2xl:w-72">
                     {{-- Backlog --}}
-                    <div class="h-full lg:flex-1">
+                    <div class="h-full xl:flex-1">
                         <div class="bg-gray-800/90 border border-gray-700 rounded-lg p-4 h-full flex flex-col">
                             <header class="flex items-center justify-between mb-3">
                                 <div>
@@ -83,7 +83,7 @@
 
                 {{-- RIGHT COLUMN: Planner only (more space) --}}
                 <main
-                    class="flex-1 min-w-0 space-y-6"
+                    class="flex-1 min-w-0 space-y-6 xl:min-h-full"
                     data-planner-board
                     data-schedule-url="{{ route('planner.schedule') }}">
                     {{-- Flash message --}}
