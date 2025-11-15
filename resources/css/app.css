@@ -43,6 +43,17 @@ button,
     -webkit-line-clamp: 2; /* base */
   }
 
+   .layout-main {
+    width: 100%;
+  }
+
+  @media (min-width: 1024px) {
+    .layout-main {
+      max-width: calc(100vw - 16rem);
+    }
+  }
+
+
   @screen md {
     .clamp-resp { -webkit-line-clamp: 3; }
   }

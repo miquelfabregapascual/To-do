@@ -45,6 +45,7 @@
                                                     paragraph-class="mt-1 text-xs text-gray-300 leading-5" />
                                             </div>
                                         </div>
+                                    </div>
 
                                         <div class="flex items-center justify-between gap-2 pt-3 border-t border-gray-600/60">
                                             <button
@@ -70,13 +71,13 @@
                                             </form>
                                         </div>
                                     </div>
-                                </article>
-                                @empty
-                                <div class="bg-gray-800/60 border border-dashed border-gray-600 text-sm text-gray-300 text-center py-10 rounded-lg">
-                                    Backlog vacío. Guarda tareas sin fecha y arrástralas al plan semanal.
                                 </div>
-                                @endforelse
+                            </article>
+                            @empty
+                            <div class="bg-gray-800/60 border border-dashed border-gray-600 text-sm text-gray-300 text-center py-10 rounded-lg">
+                                Backlog vacío. Guarda tareas sin fecha y arrástralas al plan semanal.
                             </div>
+                            @endforelse
                         </div>
                     </div>
                 </aside>
@@ -93,65 +94,77 @@
                     </div>
                     @endif
 
-                    {{-- === Quick Add Form === --}}
-                    <section class="bg-gray-800/90 border border-gray-700 rounded-lg p-4">
-                        <header class="flex items-center justify-between mb-4">
-                            <div>
-                                <h3 class="text-base font-semibold text-gray-100">Añadir tarea</h3>
-                                <p class="text-xs text-gray-400">Completa la fecha para agendarla o déjala vacía para guardar en el backlog.</p>
-                            </div>
-                        </header>
-
-                        <form method="POST" action="{{ route('tasks.store') }}" class="grid grid-cols-1 sm:grid-cols-6 gap-3 items-end">
-                            @csrf
-                            <div class="sm:col-span-3">
-                                <label for="title" class="block text-xs font-medium text-gray-300">Título</label>
-                                <input id="title" name="title" type="text" required
-                                    class="w-full mt-1 px-3 py-2 rounded-md bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    placeholder="Ej. Preparar informe semanal" value="{{ old('title') }}" />
-                                @error('title') <p class="text-red-300 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-
-                            <div class="sm:col-span-2">
-                                <label for="due_date" class="block text-xs font-medium text-gray-300">Fecha (opcional)</label>
-                                <input id="due_date" name="due_date" type="date"
-                                    class="w-full mt-1 px-3 py-2 rounded-md bg-gray-800 border border-gray-600 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    value="{{ old('due_date', ($weekStart ?? now())->toDateString()) }}"
-                                    min="{{ now()->toDateString() }}">
-                                @error('due_date') <p class="text-red-300 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-
-                            <div class="sm:col-span-6">
-                                <label for="description" class="block text-xs font-medium text-gray-300">Descripción</label>
-                                <textarea id="description" name="description" rows="2"
-                                    class="w-full mt-1 px-3 py-2 rounded-md bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    placeholder="Detalles, notas o contexto">{{ old('description') }}</textarea>
-                                @error('description') <p class="text-red-300 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-
-                            <div class="sm:col-span-1 flex justify-end">
-                                <button type="submit" class="inline-flex items-center justify-center rounded-md bg-blue-600 hover:bg-blue-700 px-4 py-2.5 text-white text-sm font-medium">
-                                    Guardar
-                                </button>
-                            </div>
-                        </form>
-                    </section>
-
-                    {{-- === Calendar Navigation === --}}
-                    @php $today = now()->startOfDay(); @endphp
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                        <div class="flex items-center gap-2">
-                            <a href="{{ route('dashboard', ['week' => ($weekOffset ?? 0) - 1]) }}"
-                                class="px-3 py-1.5 rounded-md bg-gray-800 border border-gray-700 hover:bg-gray-700" title="Semana anterior">←</a>
-                            <a href="{{ route('dashboard', ['week' => 0]) }}"
-                                class="px-3 py-1.5 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-medium" title="Volver a la semana actual">Hoy</a>
-                            <a href="{{ route('dashboard', ['week' => ($weekOffset ?? 0) + 1]) }}"
-                                class="px-3 py-1.5 rounded-md bg-gray-800 border border-gray-700 hover:bg-gray-700" title="Siguiente semana">→</a>
+                        <div class="sm:col-span-2">
+                            <label for="due_date" class="block text-xs font-medium text-gray-300">Fecha (opcional)</label>
+                            <input id="due_date" name="due_date" type="date"
+                                class="w-full mt-1 px-3 py-2 rounded-md bg-gray-800 border border-gray-600 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                value="{{ old('due_date', ($weekStart ?? now())->toDateString()) }}"
+                                min="{{ now()->toDateString() }}">
+                            @error('due_date') <p class="text-red-300 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
 
-                        <div class="text-sm text-gray-300">
-                            {{ ($weekStart ?? now())->translatedFormat('d M Y') }} –
-                            {{ ($weekEnd ?? now())->translatedFormat('d M Y') }}
+                        <div class="sm:col-span-6">
+                            <label for="description" class="block text-xs font-medium text-gray-300">Descripción</label>
+                            <textarea id="description" name="description" rows="2"
+                                class="w-full mt-1 px-3 py-2 rounded-md bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Detalles, notas o contexto">{{ old('description') }}</textarea>
+                            @error('description') <p class="text-red-300 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+
+                        <div class="sm:col-span-1 flex justify">
+                            <button type="submit" class="inline-flex items-center justify-center rounded-md bg-blue-600 hover:bg-blue-700 px-4 py-2.5 text-white text-sm font-medium">
+                                Guardar
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </main>
+        </div>
+
+        {{-- BOTTOM: calendar uses FULL width (under backlog + quick add) --}}
+        @php $today = now()->startOfDay(); @endphp
+
+        {{-- Calendar navigation --}}
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div class="flex items-center gap-2">
+                <a href="{{ route('dashboard', ['week' => ($weekOffset ?? 0) - 1]) }}"
+                    class="px-3 py-1.5 rounded-md bg-gray-800 border border-gray-700 hover:bg-gray-700" title="Semana anterior">←</a>
+                <a href="{{ route('dashboard', ['week' => 0]) }}"
+                    class="px-3 py-1.5 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-medium" title="Volver a la semana actual">Hoy</a>
+                <a href="{{ route('dashboard', ['week' => ($weekOffset ?? 0) + 1]) }}"
+                    class="px-3 py-1.5 rounded-md bg-gray-800 border border-gray-700 hover:bg-gray-700" title="Siguiente semana">→</a>
+            </div>
+
+            <div class="text-sm text-gray-300">
+                {{ ($weekStart ?? now())->translatedFormat('d M Y') }} –
+                {{ ($weekEnd ?? now())->translatedFormat('d M Y') }}
+            </div>
+        </div>
+
+        {{-- Week grid (full width, scrolls if needed) --}}
+        <div class="overflow-x-auto">
+            <div class="planner-week min-h-full">
+                @foreach ($days as $day)
+                @php
+                    $isToday = $day->isSameDay($today);
+                    $dayKey = $day->toDateString();
+                    $dayTasks = ($tasksByDate ?? collect())->get($dayKey, collect());
+                    $count = $dayTasks->count();
+                @endphp
+
+                <section class="planner-day bg-gray-800/90 border border-gray-700 rounded-xl p-3 space-y-2 transition-all"
+                    data-drop-date="{{ $dayKey }}">
+                    <header class="flex items-center justify-between gap-3">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-[11px] font-semibold tracking-[0.14em] text-gray-400 uppercase">{{ $day->translatedFormat('l') }}</span>
+                            <div class="inline-flex items-center gap-2">
+                                <span class="inline-flex items-center justify-center rounded-full px-2 py-0.5 text-xs font-semibold leading-tight {{ $isToday ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-100' }}">
+                                    {{ $day->translatedFormat('d M') }}
+                                </span>
+                                @if ($isToday)
+                                <span class="text-[11px] font-medium text-blue-300">Hoy</span>
+                                @endif
+                            </div>
                         </div>
                     </div>
 
@@ -251,6 +264,13 @@
                 </main>
             </div>
         </div>
+    </div>
+</div>
+
+
+
+
+
     </div>
 
     <script>
