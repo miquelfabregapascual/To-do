@@ -131,7 +131,7 @@
                             @error('description') <p class="text-red-300 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
 
-                        <div class="sm:col-span-1 flex justify-end">
+                        <div class="sm:col-span-1 flex justify">
                             <button type="submit" class="inline-flex items-center justify-center rounded-md bg-blue-600 hover:bg-blue-700 px-4 py-2.5 text-white text-sm font-medium">
                                 Guardar
                             </button>
